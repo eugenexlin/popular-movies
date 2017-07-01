@@ -4,4 +4,9 @@ App for Udacity
 
 ### How to Use
 
-Set The Movie DB API Key inside gradle.properties.
+Set 
+
+TheMovieDBApiKey="YourKey" 
+
+inside gradle.properties.
+You can put this in your project, or the [user home]/.gradle/gradle.properties file.
