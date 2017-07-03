@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.djdenpa.popularmovies.MoviePosterFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    >
+
+  <ImageView
+      android:id="@+id/iv_movie_poster"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:layout_gravity="bottom"
+      android:gravity="bottom" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/tintForTextOnImage" >
+
+      <TextView
+          android:id="@+id/tv_movie_title"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="@android:color/white"
+          android:paddingTop="0dp"
+          android:paddingBottom="0dp"
+          android:paddingLeft="8dp"
+          android:paddingRight="8dp"
+          android:textSize="20sp"
+          />
+
+      <TableRow
+          android:id="@+id/tr_movie_rating"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:weightSum="100" >
+
+        <TextView
+            android:id="@+id/tv_movie_rating"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_weight="40"
+            android:gravity="right"
+            />
+        <ProgressBar
+            android:id="@+id/pb_movie_rating_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="8dp"
+            />
+
+      </TableRow>
+
+      <TableRow
+          android:id="@+id/tr_movie_popularity"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:weightSum="100" >
+
+        <TextView
+            android:id="@+id/tv_movie_popularity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_weight="40"
+            android:gravity="right"
+            />
+        <ProgressBar
+            android:id="@+id/pb_movie_popularity_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="8dp"
+            />
+
+      </TableRow>
+
+    </LinearLayout>
+  </LinearLayout>
+</com.djdenpa.popularmovies.MoviePosterFrameLayout>
