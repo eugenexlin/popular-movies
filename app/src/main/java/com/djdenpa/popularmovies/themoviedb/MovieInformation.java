@@ -3,6 +3,7 @@ package com.djdenpa.popularmovies.themoviedb;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Date;
  * Created by denpa on 7/1/2017.
  */
 
-public class MovieInformation {
+public class MovieInformation implements Serializable {
 
   protected final static SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 

@@ -7,8 +7,8 @@
     tools:context="com.djdenpa.popularmovies.PopMovies">
 
   <TextView
-      android:id="@+id/tv_error_message_discover"
-      android:layout_width="wrap_content"
+      android:id="@+id/tv_error_message"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:padding="16dp"
       android:text="@string/discover_error_message"
@@ -16,7 +16,7 @@
       android:textColor="#f00"
       android:background="#ccffffff"
       android:visibility="invisible"
-      android:elevation="10dp"/>
+      android:elevation="3dp"/>
 
 
   <android.support.v7.widget.RecyclerView
@@ -30,7 +30,7 @@
       android:layout_width="64dp"
       android:layout_height="64dp"
       android:layout_gravity="bottom|right"
-      android:visibility="visible"/>
+      android:visibility="gone"/>
 
 
 

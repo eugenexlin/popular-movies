@@ -1,6 +1,7 @@
 package com.djdenpa.popularmovies;
 
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 
 public class PopMovies extends AppCompatActivity {
 
+  //protected static final String MOVIE_POSTER_STATE = "movieposter.recycleview.state";
+
   private RecyclerView mRecyclerView;
 
   private MoviePosterAdapter mMoviePosterAdapter;
@@ -31,7 +34,6 @@ public class PopMovies extends AppCompatActivity {
   private int mPageNum = 0;
   public ApiParams.MovieSort sort = ApiParams.MovieSort.POPULARITY;
 
-
   private int mLoadMoreThreshold = 6;
   private boolean isLoadingMoreMovies = false;
   private boolean allowLoadingMoreMovies = true;
@@ -41,10 +43,34 @@ public class PopMovies extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_pop_movies);
 
+    setTitle(R.string.popular_header);
+
     mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_posters);
 
     final GridLayoutManager layoutManager
-            = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+            = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false){
+
+      @Override
+      public Parcelable onSaveInstanceState() {
+        MoviePosterParcelable state = new MoviePosterParcelable();
+        state.mScrollPosition = this.findFirstVisibleItemPosition();
+        state.mMovieData = mMoviePosterAdapter.mMovieData;
+        return state;
+      }
+
+      @Override
+      public void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+        if(state != null && state instanceof MoviePosterParcelable) {
+          MoviePosterParcelable movieState = (MoviePosterParcelable) state;
+          mMoviePosterAdapter.mMovieData = movieState.mMovieData;
+          int count = this.getChildCount();
+          if (movieState.mScrollPosition != RecyclerView.NO_POSITION && movieState.mScrollPosition < count) {
+            this.scrollToPosition(movieState.mScrollPosition);
+          }
+        }
+      }
+    };
     mRecyclerView.setLayoutManager(layoutManager);
 
     mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -67,13 +93,12 @@ public class PopMovies extends AppCompatActivity {
     mMoviePosterAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
       @Override
       public void onLoadMore() {
-        System.out.println("LoadingMore");
         PerformDiscoverMovies();
       }
     });
 
     mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-    mErrorMessageDiscover = (TextView) findViewById(R.id.tv_error_message_discover);
+    mErrorMessageDiscover = (TextView) findViewById(R.id.tv_error_message);
 
     PerformNewDiscoverMovies();
   }
@@ -113,8 +138,18 @@ public class PopMovies extends AppCompatActivity {
     mErrorMessageDiscover.setVisibility(View.GONE);
   }
 
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    //outState.putParcelable(MOVIE_POSTER_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
+  }
 
-
+  @Override
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    //Parcelable moviePosterState = savedInstanceState.getParcelable(MOVIE_POSTER_STATE);
+    //mRecyclerView.getLayoutManager().onRestoreInstanceState(moviePosterState);
+  }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,8 +169,10 @@ public class PopMovies extends AppCompatActivity {
     if (id == R.id.action_sort) {
       if (sort == ApiParams.MovieSort.POPULARITY){
         sort = ApiParams.MovieSort.RATING;
+        setTitle(R.string.highest_rated_header);
       }else if (sort == ApiParams.MovieSort.RATING){
         sort = ApiParams.MovieSort.POPULARITY;
+        setTitle(R.string.popular_header);
       }
       mMoviePosterAdapter.sort = sort;
       PerformNewDiscoverMovies();
@@ -169,7 +206,7 @@ public class PopMovies extends AppCompatActivity {
 
     @Override
     protected void onPostExecute(ArrayList<MovieInformation> movieData) {
-      mLoadingIndicator.setVisibility(View.INVISIBLE);
+      mLoadingIndicator.setVisibility(View.GONE);
       if (movieData != null) {
         showMovies();
         if (mPageNum <= 1 || allowLoadingMoreMovies){

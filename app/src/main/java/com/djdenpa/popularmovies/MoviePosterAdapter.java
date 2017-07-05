@@ -1,6 +1,7 @@
 package com.djdenpa.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,9 @@ import java.util.ArrayList;
  * Created by denpa on 6/25/2017.
  */
 
-public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHolder> {
+public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHolder> implements MoviePosterOnClickHandler {
 
-  private ArrayList<MovieInformation> mMovieData = new ArrayList<>();
+  public ArrayList<MovieInformation> mMovieData = new ArrayList<>();
   private double maxPopularity = 0;
 
   protected Context mContext = null;
@@ -31,7 +32,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
     LayoutInflater inflater = LayoutInflater.from(mContext);
 
     View view = inflater.inflate(layoutIdForListItem, parent, false);
-    return new MoviePosterViewHolder(view);
+    return new MoviePosterViewHolder(view, this);
   }
 
   @Override
@@ -99,5 +100,17 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
     if (mOnLoadMoreListener != null){
       mOnLoadMoreListener.onLoadMore();
     }
+  }
+
+  @Override
+  public void onClick(int position) {
+    MovieInformation movie = mMovieData.get(position);
+    Class destinationClass = MovieDetailActivity.class;
+    Intent intentToStartDetailActivity = new Intent(mContext, destinationClass);
+    // COMPLETED (1) Pass the weather to the DetailActivity
+    intentToStartDetailActivity.putExtra(MovieDetailActivity.MOVIE_NAME_EXTRA, movie.originalTitle);
+    intentToStartDetailActivity.putExtra(MovieDetailActivity.MOVIE_ID_EXTRA, movie.movieId);
+    mContext.startActivity(intentToStartDetailActivity);
+
   }
 }

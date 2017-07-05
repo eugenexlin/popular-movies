@@ -28,6 +28,11 @@ public class TheMovieDbApi {
 
   final static String QUERY_PARAM_API_KEY = "api_key";
 
+  /**
+   * Takes in parameters, and returns an ArrayList of movies
+   * @param params
+   * @return
+   */
   public static ArrayList<MovieInformation> QueryMovies(ApiParams params){
     HashMap<String,String> queryString = new HashMap<>();
     queryString.put("page", String.valueOf(params.page));
@@ -42,21 +47,19 @@ public class TheMovieDbApi {
     }
     Uri discoverUri = BuildTheMovieDbUrl(path, queryString);
 
-    URL url = null;
+    URL url;
     ArrayList<MovieInformation> result = new ArrayList<>();
     try {
       url = new URL(discoverUri.toString());
       String httpResult = getResponseFromHttpUrl(url);
-      JSONObject discoverJson = new JSONObject(httpResult);
+      JSONObject moviesJson = new JSONObject(httpResult);
 
-      JSONArray resultsJson = discoverJson.getJSONArray("results");
+      JSONArray resultsJson = moviesJson.getJSONArray("results");
 
       for(int i=0; i<resultsJson.length(); i++){
         JSONObject movieJson = resultsJson.getJSONObject(i);
         result.add(new MovieInformation(movieJson));
       }
-
-      //int test = 1/0;
 
     } catch (Exception e) {
       //For the sake of brevity, I will capture all exceptions and log it.
@@ -67,6 +70,29 @@ public class TheMovieDbApi {
       return null;
     }
     return result;
+  }
+
+  /**
+   * takes in id, and returns a single MovieInformation object
+   * @param id
+   * @return
+   */
+  public static MovieInformation GetMovieById(int id){
+    HashMap<String,String> queryString = new HashMap<>();
+    String path = "movie/" + id;
+    Uri discoverUri = BuildTheMovieDbUrl(path, queryString);
+
+    URL url;
+    try {
+      url = new URL(discoverUri.toString());
+      String httpResult = getResponseFromHttpUrl(url);
+      JSONObject movieJson = new JSONObject(httpResult);
+
+      return new MovieInformation(movieJson);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   /** Builds a URL with the API key set.

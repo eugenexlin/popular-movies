@@ -11,7 +11,7 @@ import android.widget.TextView;
  * Created by denpa on 6/25/2017.
  */
 
-public class MoviePosterViewHolder extends RecyclerView.ViewHolder {
+public class MoviePosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
   public final ImageView mMoviePoster;
   public final TextView mMovieTitle;
@@ -24,8 +24,12 @@ public class MoviePosterViewHolder extends RecyclerView.ViewHolder {
   public final TextView mRating;
   public final ProgressBar mRatingBar;
 
-  public MoviePosterViewHolder(View itemView) {
+  protected MoviePosterOnClickHandler mClickHandler = null;
+
+  public MoviePosterViewHolder(View itemView, MoviePosterOnClickHandler handler) {
     super(itemView);
+
+    mClickHandler = handler;
 
     mMoviePoster = (ImageView) itemView.findViewById(R.id.iv_movie_poster);
     mMovieTitle = (TextView) itemView.findViewById(R.id.tv_movie_title);
@@ -37,5 +41,15 @@ public class MoviePosterViewHolder extends RecyclerView.ViewHolder {
     mRatingRow = (TableRow) itemView.findViewById(R.id.tr_movie_rating);
     mRating = (TextView) itemView.findViewById(R.id.tv_movie_rating);
     mRatingBar = (ProgressBar) itemView.findViewById(R.id.pb_movie_rating_bar);
+
+    itemView.setOnClickListener(this);
+  }
+
+  @Override
+  public void onClick(View v) {
+    int adapterPosition = getAdapterPosition();
+    if ( mClickHandler != null){
+      mClickHandler.onClick(adapterPosition);
+    }
   }
 }
