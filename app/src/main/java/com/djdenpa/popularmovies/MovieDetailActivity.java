@@ -15,6 +15,7 @@ import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +32,11 @@ public class MovieDetailActivity extends AppCompatActivity {
   protected ImageView mMoviePoster;
   protected ProgressBar mLoadingIndicator;
 
+  protected TextView mMovieYear;
+  protected TextView mMovieRating;
+  protected TextView mMovieSynopsis;
+  protected TextView mMovieDuration;
+
   protected int mMovieId = -1;
   protected MovieInformation movie;
 
@@ -45,6 +51,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     mMoviePoster = (ImageView) findViewById(R.id.iv_movie_poster);
     mErrorMessage = (TextView) findViewById(R.id.tv_error_message);
     mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+
+    mMovieYear = (TextView) findViewById(R.id.tv_movie_year);
+    mMovieRating = (TextView) findViewById(R.id.tv_movie_rating);
+    mMovieSynopsis = (TextView) findViewById(R.id.tv_movie_synopsis);
+    mMovieDuration = (TextView) findViewById(R.id.tv_movie_duration);
 
     Intent intentThatStartedThisActivity = getIntent();
 
@@ -102,6 +113,13 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onPostExecute(MovieInformation movieData) {
       mLoadingIndicator.setVisibility(View.GONE);
       if (movieData != null) {
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy");
+        mMovieYear.setText(df.format(movieData.releaseDate));
+        String voteString = String.format( "%.1f/10 (%d votes)", movieData.voteAverage, movieData.voteCount);
+        mMovieRating.setText(voteString);
+        mMovieDuration.setText(String.format("%dmin", movieData.duration));
+        mMovieSynopsis.setText(movieData.plotSynopsis);
 
 
         Picasso.with(getBaseContext()).load(movieData.posterUrlSmall).into(mMoviePoster, new com.squareup.picasso.Callback() {

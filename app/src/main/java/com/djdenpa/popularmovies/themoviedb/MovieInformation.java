@@ -30,6 +30,8 @@ public class MovieInformation implements Serializable {
   public long voteCount;
   public double popularity;
 
+  public int duration;
+
   public MovieInformation(JSONObject jObj) throws JSONException, ParseException {
     movieId = jObj.getInt("id");
 
@@ -44,6 +46,12 @@ public class MovieInformation implements Serializable {
     voteAverage = jObj.getInt("vote_average");
     voteCount = jObj.getInt("vote_count");
     popularity = jObj.getDouble("popularity");
+
+
+    //below are fields that might not exist on the query result.
+    if (jObj.has("runtime")) {
+      duration = jObj.getInt("runtime");
+    }
   }
 
 }
