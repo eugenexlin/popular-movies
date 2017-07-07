@@ -17,11 +17,12 @@ import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PopMovies extends AppCompatActivity {
 
-  //protected static final String MOVIE_POSTER_STATE = "movieposter.recycleview.state";
+  protected static final String MOVIE_POSTER_STATE = "movieposter.recycleview.state";
 
   private RecyclerView mRecyclerView;
 
@@ -47,14 +48,21 @@ public class PopMovies extends AppCompatActivity {
 
     mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_posters);
 
+    int columns = 2;
+    if (getResources().getConfiguration().orientation == 	android.content.res.Configuration.ORIENTATION_LANDSCAPE){
+      columns = 4;
+    }
+
     final GridLayoutManager layoutManager
-            = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false){
+            = new GridLayoutManager(this, columns, GridLayoutManager.VERTICAL, false){
 
       @Override
       public Parcelable onSaveInstanceState() {
         MoviePosterParcelable state = new MoviePosterParcelable();
         state.mScrollPosition = this.findFirstVisibleItemPosition();
         state.mMovieData = mMoviePosterAdapter.mMovieData;
+        state.mPageNum = mPageNum;
+        state.mSort = sort.name();
         return state;
       }
 
@@ -63,11 +71,14 @@ public class PopMovies extends AppCompatActivity {
         super.onRestoreInstanceState(state);
         if(state != null && state instanceof MoviePosterParcelable) {
           MoviePosterParcelable movieState = (MoviePosterParcelable) state;
-          mMoviePosterAdapter.mMovieData = movieState.mMovieData;
-          int count = this.getChildCount();
+          mMoviePosterAdapter.restoreMovieData(movieState.mMovieData);
+          int count = mMoviePosterAdapter.getItemCount();
           if (movieState.mScrollPosition != RecyclerView.NO_POSITION && movieState.mScrollPosition < count) {
             this.scrollToPosition(movieState.mScrollPosition);
           }
+          mPageNum = movieState.mPageNum;
+          sort = ApiParams.MovieSort.valueOf( movieState.mSort);
+          mMoviePosterAdapter.sort = sort;
         }
       }
     };
@@ -100,7 +111,9 @@ public class PopMovies extends AppCompatActivity {
     mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
     mErrorMessageDiscover = (TextView) findViewById(R.id.tv_error_message);
 
-    PerformNewDiscoverMovies();
+    if (savedInstanceState == null){
+      PerformNewDiscoverMovies();
+    }
   }
 
 
@@ -141,14 +154,14 @@ public class PopMovies extends AppCompatActivity {
   @Override
   public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    //outState.putParcelable(MOVIE_POSTER_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
+    outState.putParcelable(MOVIE_POSTER_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
   }
 
   @Override
   public void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
-    //Parcelable moviePosterState = savedInstanceState.getParcelable(MOVIE_POSTER_STATE);
-    //mRecyclerView.getLayoutManager().onRestoreInstanceState(moviePosterState);
+    Parcelable moviePosterState = savedInstanceState.getParcelable(MOVIE_POSTER_STATE);
+    mRecyclerView.getLayoutManager().onRestoreInstanceState(moviePosterState);
   }
 
   @Override
@@ -181,7 +194,6 @@ public class PopMovies extends AppCompatActivity {
 
     return super.onOptionsItemSelected(item);
   }
-
 
   /**
    * Run the function to get the ArrayList of MovieInformation objects.

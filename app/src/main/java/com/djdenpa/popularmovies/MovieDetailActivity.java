@@ -10,13 +10,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 /**
  * Created by denpa on 7/4/2017.
@@ -36,6 +34,7 @@ public class MovieDetailActivity extends AppCompatActivity {
   protected TextView mMovieRating;
   protected TextView mMovieSynopsis;
   protected TextView mMovieDuration;
+  protected TextView mMovieReleaseDate;
 
   protected int mMovieId = -1;
   protected MovieInformation movie;
@@ -43,7 +42,12 @@ public class MovieDetailActivity extends AppCompatActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_movie_details);
+
+    if (getResources().getConfiguration().orientation == 	android.content.res.Configuration.ORIENTATION_LANDSCAPE){
+      setContentView(R.layout.activity_movie_details_landscape);
+    }else{
+      setContentView(R.layout.activity_movie_details);
+    }
 
     setTitle(R.string.movie_details_header);
 
@@ -56,6 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     mMovieRating = (TextView) findViewById(R.id.tv_movie_rating);
     mMovieSynopsis = (TextView) findViewById(R.id.tv_movie_synopsis);
     mMovieDuration = (TextView) findViewById(R.id.tv_movie_duration);
+    mMovieReleaseDate = (TextView) findViewById(R.id.tv_movie_release_date);
 
     Intent intentThatStartedThisActivity = getIntent();
 
@@ -113,14 +118,19 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onPostExecute(MovieInformation movieData) {
       mLoadingIndicator.setVisibility(View.GONE);
       if (movieData != null) {
+        movie = movieData;
 
-        SimpleDateFormat df = new SimpleDateFormat("yyyy");
-        mMovieYear.setText(df.format(movieData.releaseDate));
         String voteString = String.format( "%.1f/10 (%d votes)", movieData.voteAverage, movieData.voteCount);
         mMovieRating.setText(voteString);
         mMovieDuration.setText(String.format("%dmin", movieData.duration));
         mMovieSynopsis.setText(movieData.plotSynopsis);
 
+        if (movieData.releaseDate != null){
+          SimpleDateFormat df = new SimpleDateFormat("yyyy");
+          mMovieYear.setText(df.format(movieData.releaseDate));
+          SimpleDateFormat dfRelease = new SimpleDateFormat("dd MMM yyyy");
+          mMovieReleaseDate.setText(String.format("Release Date: %s", dfRelease.format(movieData.releaseDate)));
+        }
 
         Picasso.with(getBaseContext()).load(movieData.posterUrlSmall).into(mMoviePoster, new com.squareup.picasso.Callback() {
           @Override

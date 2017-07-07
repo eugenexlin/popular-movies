@@ -81,6 +81,11 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
     notifyDataSetChanged();
   }
 
+  public void restoreMovieData(ArrayList<MovieInformation> movieData){
+    clearMovieData();
+    appendMovieData(movieData);
+  }
+
   public void clearMovieData(){
     mMovieData.clear();
     maxPopularity = 0;

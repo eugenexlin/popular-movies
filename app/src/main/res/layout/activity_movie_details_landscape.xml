@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+  <LinearLayout
+      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+
+
+
+    <TextView
+        android:id="@+id/tv_movie_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/colorPrimaryDark"
+        android:textSize="42sp"
+        android:text="Movie Title"
+        android:textColor="@color/lightText"
+        android:elevation="6dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="@string/discover_error_message"
+        android:textSize="20sp"
+        android:textColor="#f00"
+        android:background="#ccffffff"
+        android:visibility="gone"
+        android:elevation="3dp"/>
+
+
+    <ProgressBar
+        android:id="@+id/pb_loading_indicator"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+
+
+      <TableRow
+          android:id="@+id/tr_movie_popularity"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:weightSum="100">
+
+
+
+
+        <com.djdenpa.popularmovies.MoviePosterFrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="40"
+            >
+
+          <ImageView
+              android:id="@+id/iv_movie_poster"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:scaleType="centerCrop"
+              />
+
+        </com.djdenpa.popularmovies.MoviePosterFrameLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            >
+
+
+          <TextView
+              android:id="@+id/tv_movie_year"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="left"
+              android:paddingTop="12dp"
+              android:paddingLeft="4dp"
+              android:textSize="36sp"
+              android:text="2000"
+              />
+          <TextView
+              android:id="@+id/tv_movie_duration"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="left"
+              android:padding="4dp"
+              android:textSize="24sp"
+              android:textStyle="italic|bold"
+              android:text="120m"
+              />
+          <TextView
+              android:id="@+id/tv_movie_rating"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="left"
+              android:padding="4dp"
+              android:textSize="18sp"
+              android:text="8.0/10"
+              />
+
+          <TextView
+              android:id="@+id/tv_movie_synopsis"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="left"
+              android:padding="4dp"
+              android:layout_marginTop="16dp"
+              android:textSize="18sp"
+              android:text="I have a very nice story"
+              />
+
+          <TextView
+              android:id="@+id/tv_movie_release_date"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="left"
+              android:padding="4dp"
+              android:textSize="18sp"
+              android:text="1/2/3"
+              />
+
+        </LinearLayout>
+
+
+      </TableRow>
+
+    </LinearLayout>
+
+  </LinearLayout>
+
+</ScrollView>

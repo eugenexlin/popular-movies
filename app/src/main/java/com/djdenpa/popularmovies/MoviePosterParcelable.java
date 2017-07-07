@@ -3,6 +3,7 @@ package com.djdenpa.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.ArrayList;
 
 public class MoviePosterParcelable implements Parcelable {
   public int mScrollPosition;
+  public int mPageNum;
+  public String mSort;
   public ArrayList<MovieInformation> mMovieData;
 
   public MoviePosterParcelable() {
@@ -20,6 +23,8 @@ public class MoviePosterParcelable implements Parcelable {
 
   protected MoviePosterParcelable(Parcel in) {
     mScrollPosition = in.readInt();
+    mPageNum = in.readInt();
+    mSort = in.readString();
     mMovieData = (ArrayList<MovieInformation>) in.readSerializable();
   }
 
@@ -44,6 +49,8 @@ public class MoviePosterParcelable implements Parcelable {
   @Override
   public void writeToParcel(Parcel dest, int flags) {
     dest.writeInt(mScrollPosition);
+    dest.writeInt(mPageNum);
+    dest.writeString(mSort);
     dest.writeSerializable(mMovieData);
   }
 
