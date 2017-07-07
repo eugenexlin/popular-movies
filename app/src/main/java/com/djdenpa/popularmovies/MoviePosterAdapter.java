@@ -12,17 +12,20 @@ import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by denpa on 6/25/2017.
+ *
+ * Recycler View for holding movie posters
  */
 
 public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHolder> implements MoviePosterOnClickHandler {
 
-  public ArrayList<MovieInformation> mMovieData = new ArrayList<>();
+  public final ArrayList<MovieInformation> mMovieData = new ArrayList<>();
   private double maxPopularity = 0;
 
-  protected Context mContext = null;
+  private Context mContext = null;
 
   public ApiParams.MovieSort sort = ApiParams.MovieSort.POPULARITY;
 
@@ -42,7 +45,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
 
     //popularity
     holder.mPopularityRow.setVisibility (((sort == ApiParams.MovieSort.POPULARITY) ? View.VISIBLE : View.GONE));
-    holder.mPopularity.setText(String.format( "%.1f", movie.popularity));
+    holder.mPopularity.setText(String.format(Locale.US, "%.1f", movie.popularity));
     int maxPop = (int) Math.floor(maxPopularity*10);
     int pop = (int) Math.floor(movie.popularity*10);
     holder.mPopularityBar.setMax(maxPop);
@@ -50,7 +53,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
 
     //rating
     holder.mRatingRow.setVisibility (((sort == ApiParams.MovieSort.RATING) ? View.VISIBLE : View.GONE));
-    holder.mRating.setText(String.format( "%.1f ★", movie.voteAverage));
+    holder.mRating.setText(String.format(Locale.US, "%.1f ★", movie.voteAverage));
     int rate = (int) Math.floor(movie.voteAverage*10);
     holder.mRatingBar.setMax(100);
     holder.mRatingBar.setProgress(rate);

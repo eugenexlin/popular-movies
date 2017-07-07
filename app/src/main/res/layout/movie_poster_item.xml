@@ -11,6 +11,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scaleType="centerCrop"
+      android:contentDescription="@string/poster_content_description"
       />
 
   <LinearLayout
@@ -51,7 +52,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_weight="40"
-            android:gravity="right"
+            android:gravity="end"
             />
         <ProgressBar
             android:id="@+id/pb_movie_rating_bar"
@@ -61,8 +62,8 @@
             android:layout_weight="60"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="8dp"
             />
 
       </TableRow>
@@ -80,7 +81,7 @@
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:layout_weight="40"
-            android:gravity="right"
+            android:gravity="end"
             />
         <ProgressBar
             android:id="@+id/pb_movie_popularity_bar"
@@ -90,8 +91,8 @@
             android:layout_weight="60"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="8dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="8dp"
             />
 
       </TableRow>

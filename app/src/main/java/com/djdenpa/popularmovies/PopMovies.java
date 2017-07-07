@@ -17,12 +17,11 @@ import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PopMovies extends AppCompatActivity {
 
-  protected static final String MOVIE_POSTER_STATE = "movieposter.recycleview.state";
+  private static final String MOVIE_POSTER_STATE = "movieposter.recycleview.state";
 
   private RecyclerView mRecyclerView;
 
@@ -33,9 +32,9 @@ public class PopMovies extends AppCompatActivity {
   private TextView mErrorMessageDiscover;
 
   private int mPageNum = 0;
-  public ApiParams.MovieSort sort = ApiParams.MovieSort.POPULARITY;
+  private ApiParams.MovieSort sort = ApiParams.MovieSort.POPULARITY;
 
-  private int mLoadMoreThreshold = 6;
+  private final int mLoadMoreThreshold = 6;
   private boolean isLoadingMoreMovies = false;
   private boolean allowLoadingMoreMovies = true;
 
@@ -121,7 +120,7 @@ public class PopMovies extends AppCompatActivity {
    * This function is called to initialize a fresh search on page 1 of the API.
    *
    */
-  protected void PerformNewDiscoverMovies(){
+  private void PerformNewDiscoverMovies(){
     mPageNum = 0;
 
     //this is if there is a background request for loading another page,
@@ -130,7 +129,8 @@ public class PopMovies extends AppCompatActivity {
     mMoviePosterAdapter.clearMovieData();
     PerformDiscoverMovies();
   }
-  protected void PerformDiscoverMovies(){
+
+  private void PerformDiscoverMovies(){
     allowLoadingMoreMovies = true;
     int pageToLoad = (++mPageNum);
 
@@ -198,7 +198,7 @@ public class PopMovies extends AppCompatActivity {
   /**
    * Run the function to get the ArrayList of MovieInformation objects.
    */
-  public class AppendMoreMoviesTask extends AsyncTask<ApiParams, Void, ArrayList<MovieInformation>> {
+  private class AppendMoreMoviesTask extends AsyncTask<ApiParams, Void, ArrayList<MovieInformation>> {
 
     @Override
     protected void onPreExecute() {

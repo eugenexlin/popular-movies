@@ -2,6 +2,8 @@ package com.djdenpa.popularmovies.themoviedb;
 
 /**
  * Created by denpa on 7/1/2017.
+ *
+ * Hold strongly typed params for querying Movie API
  */
 
 public class ApiParams {

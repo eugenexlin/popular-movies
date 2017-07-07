@@ -14,10 +14,14 @@ import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Created by denpa on 7/4/2017.
+ *
+ * Activity for viewing a single movie's details
  */
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -25,19 +29,19 @@ public class MovieDetailActivity extends AppCompatActivity {
   public static final String MOVIE_NAME_EXTRA = "MovieDetailActivity_MOVIE_NAME_EXTRA";
   public static final String MOVIE_ID_EXTRA = "MovieDetailActivity_MOVIE_ID_EXTRA";
 
-  protected TextView mMovieTitle;
-  protected TextView mErrorMessage;
-  protected ImageView mMoviePoster;
-  protected ProgressBar mLoadingIndicator;
+  private TextView mMovieTitle;
+  private TextView mErrorMessage;
+  private ImageView mMoviePoster;
+  private ProgressBar mLoadingIndicator;
 
-  protected TextView mMovieYear;
-  protected TextView mMovieRating;
-  protected TextView mMovieSynopsis;
-  protected TextView mMovieDuration;
-  protected TextView mMovieReleaseDate;
+  private TextView mMovieYear;
+  private TextView mMovieRating;
+  private TextView mMovieSynopsis;
+  private TextView mMovieDuration;
+  private TextView mMovieReleaseDate;
 
-  protected int mMovieId = -1;
-  protected MovieInformation movie;
+  private int mMovieId = -1;
+  private MovieInformation movie;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,7 +100,7 @@ public class MovieDetailActivity extends AppCompatActivity {
   /**
    * Run the function to get the ArrayList of MovieInformation objects.
    */
-  public class LoadMovieDetailsTask extends AsyncTask<Integer, Void, MovieInformation> {
+  private class LoadMovieDetailsTask extends AsyncTask<Integer, Void, MovieInformation> {
 
     @Override
     protected void onPreExecute() {
@@ -120,16 +124,17 @@ public class MovieDetailActivity extends AppCompatActivity {
       if (movieData != null) {
         movie = movieData;
 
-        String voteString = String.format( "%.1f/10 (%d votes)", movieData.voteAverage, movieData.voteCount);
+        String voteString = String.format(Locale.US, "%.1f/10 (%d votes)", movieData.voteAverage, movieData.voteCount);
         mMovieRating.setText(voteString);
-        mMovieDuration.setText(String.format("%dmin", movieData.duration));
+        mMovieDuration.setText(String.format(Locale.US,"%dmin", movieData.duration));
         mMovieSynopsis.setText(movieData.plotSynopsis);
 
         if (movieData.releaseDate != null){
-          SimpleDateFormat df = new SimpleDateFormat("yyyy");
+          SimpleDateFormat df = new SimpleDateFormat("yyyy", Locale.getDefault());
           mMovieYear.setText(df.format(movieData.releaseDate));
-          SimpleDateFormat dfRelease = new SimpleDateFormat("dd MMM yyyy");
-          mMovieReleaseDate.setText(String.format("Release Date: %s", dfRelease.format(movieData.releaseDate)));
+          DateFormat dfRelease = SimpleDateFormat.getDateInstance();
+
+          mMovieReleaseDate.setText(String.format(Locale.US, "Release Date: %s", dfRelease.format(movieData.releaseDate)));
         }
 
         Picasso.with(getBaseContext()).load(movieData.posterUrlSmall).into(mMoviePoster, new com.squareup.picasso.Callback() {

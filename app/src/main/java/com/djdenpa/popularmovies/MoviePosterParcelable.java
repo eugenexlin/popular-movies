@@ -3,13 +3,14 @@ package com.djdenpa.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 
 import java.util.ArrayList;
 
 /**
  * Created by denpa on 7/5/2017.
+ *
+ * Hold the data to restore instance state
  */
 
 public class MoviePosterParcelable implements Parcelable {
@@ -21,7 +22,7 @@ public class MoviePosterParcelable implements Parcelable {
   public MoviePosterParcelable() {
   }
 
-  protected MoviePosterParcelable(Parcel in) {
+  private MoviePosterParcelable(Parcel in) {
     mScrollPosition = in.readInt();
     mPageNum = in.readInt();
     mSort = in.readString();

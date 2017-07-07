@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 /**
  * Created by denpa on 6/25/2017.
+ *
+ * Populates the Movie data to the views.
  */
 
 public class MoviePosterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -24,7 +26,7 @@ public class MoviePosterViewHolder extends RecyclerView.ViewHolder implements Vi
   public final TextView mRating;
   public final ProgressBar mRatingBar;
 
-  protected MoviePosterOnClickHandler mClickHandler = null;
+  private MoviePosterOnClickHandler mClickHandler = null;
 
   public MoviePosterViewHolder(View itemView, MoviePosterOnClickHandler handler) {
     super(itemView);

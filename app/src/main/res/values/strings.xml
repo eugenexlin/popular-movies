@@ -9,4 +9,15 @@
 
   <string name="action_refresh">Refresh</string>
   <string name="action_sort">Sort</string>
+
+  <string name="poster_content_description">Movie Poster</string>
+
+  <string name="placeholder_movie_title">Movie Title</string>
+  <string name="placeholder_year">2020</string>
+  <string name="placeholder_duration">100min</string>
+  <string name="placeholder_rating">10/10</string>
+  <string name="placeholder_synopsis">I have a nice story. Watch me today. Do not Delay.</string>
+  <string name="placeholder_release_date">Jan 1, 1900</string>
+
+
 </resources>

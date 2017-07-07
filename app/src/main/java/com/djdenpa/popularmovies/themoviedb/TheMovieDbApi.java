@@ -18,6 +18,8 @@ import java.util.Scanner;
 
 /**
  * Created by denpa on 7/1/2017.
+ *
+ * Class to handle pulling information from Movie API, and returning objects.
  */
 
 public class TheMovieDbApi {
@@ -30,8 +32,6 @@ public class TheMovieDbApi {
 
   /**
    * Takes in parameters, and returns an ArrayList of movies
-   * @param params
-   * @return
    */
   public static ArrayList<MovieInformation> QueryMovies(ApiParams params){
     HashMap<String,String> queryString = new HashMap<>();
@@ -74,8 +74,6 @@ public class TheMovieDbApi {
 
   /**
    * takes in id, and returns a single MovieInformation object
-   * @param id
-   * @return
    */
   public static MovieInformation GetMovieById(int id){
     HashMap<String,String> queryString = new HashMap<>();
@@ -99,7 +97,7 @@ public class TheMovieDbApi {
    * @param path relative path after base URL. does not need starting slash.
    * @param params can be null
    * **/
-  protected static Uri BuildTheMovieDbUrl(String path, Map<String,String> params){
+  private static Uri BuildTheMovieDbUrl(String path, Map<String,String> params){
     if (params == null){
       params = new HashMap<>();
     }
@@ -118,12 +116,9 @@ public class TheMovieDbApi {
 
   /**
    * Taken from Udacity Lessons.
-   * HTTP GET
-   * @param url
-   * @return
-   * @throws IOException
+   * HTTP GET to return the string response
    */
-  public static String getResponseFromHttpUrl(URL url) throws IOException {
+  private static String getResponseFromHttpUrl(URL url) throws IOException {
     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
     try {
       InputStream in = urlConnection.getInputStream();

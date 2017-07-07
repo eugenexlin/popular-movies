@@ -7,14 +7,17 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by denpa on 7/1/2017.
+ *
+ * Movie fields object
  */
 
 public class MovieInformation implements Serializable {
 
-  protected final static SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+  private final static SimpleDateFormat RELEASE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
   public int movieId;
 

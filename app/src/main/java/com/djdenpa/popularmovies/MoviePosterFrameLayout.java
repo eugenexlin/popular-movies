@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 public class MoviePosterFrameLayout extends FrameLayout
 {
 
-  public final static double MOVIE_POSTER_ASPECT_RATIO = 40.0/27.0;
+  private final static double MOVIE_POSTER_ASPECT_RATIO = 40.0/27.0;
 
   public MoviePosterFrameLayout(Context context, AttributeSet attrs)
   {
