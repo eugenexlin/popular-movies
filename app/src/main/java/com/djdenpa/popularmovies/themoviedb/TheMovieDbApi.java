@@ -58,7 +58,7 @@ public class TheMovieDbApi {
 
       for(int i=0; i<resultsJson.length(); i++){
         JSONObject movieJson = resultsJson.getJSONObject(i);
-        result.add(new MovieInformation(movieJson));
+        result.add(new MovieInformation(movieJson, true));
       }
 
     } catch (Exception e) {
@@ -86,7 +86,7 @@ public class TheMovieDbApi {
       String httpResult = getResponseFromHttpUrl(url);
       JSONObject movieJson = new JSONObject(httpResult);
 
-      return new MovieInformation(movieJson);
+      return new MovieInformation(movieJson, false);
     } catch (Exception e) {
       e.printStackTrace();
     }

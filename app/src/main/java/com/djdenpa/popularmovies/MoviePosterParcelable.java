@@ -26,7 +26,7 @@ public class MoviePosterParcelable implements Parcelable {
     mScrollPosition = in.readInt();
     mPageNum = in.readInt();
     mSort = in.readString();
-    mMovieData = (ArrayList<MovieInformation>) in.readSerializable();
+    mMovieData = (ArrayList<MovieInformation>) in.readArrayList(null);
   }
 
   public static final Creator<MoviePosterParcelable> CREATOR = new Creator<MoviePosterParcelable>() {
@@ -52,7 +52,7 @@ public class MoviePosterParcelable implements Parcelable {
     dest.writeInt(mScrollPosition);
     dest.writeInt(mPageNum);
     dest.writeString(mSort);
-    dest.writeSerializable(mMovieData);
+    dest.writeList(mMovieData);
   }
 
 }
