@@ -17,7 +17,7 @@
   <string name="placeholder_duration">100min</string>
   <string name="placeholder_rating">10/10</string>
   <string name="placeholder_synopsis">I have a nice story. Watch me today. Do not Delay.</string>
-  <string name="placeholder_release_date">Jan 1, 1900</string>
+  <string name="placeholder_release_date">Release Date: Jan 1, 1900</string>
 
 
 </resources>
