@@ -1,11 +1,13 @@
 package com.djdenpa.popularmovies;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,10 +49,7 @@ public class PopMovies extends AppCompatActivity {
 
     mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_posters);
 
-    int columns = 2;
-    if (getResources().getConfiguration().orientation == 	android.content.res.Configuration.ORIENTATION_LANDSCAPE){
-      columns = 4;
-    }
+    int columns = calculateNoOfColumns(getBaseContext());
 
     final GridLayoutManager layoutManager
             = new GridLayoutManager(this, columns, GridLayoutManager.VERTICAL, false){
@@ -113,6 +112,26 @@ public class PopMovies extends AppCompatActivity {
     if (savedInstanceState == null){
       PerformNewDiscoverMovies();
     }
+  }
+
+  /**
+   * Based On Suggestion from Otieno Rowland code review.
+   */
+  public static int calculateNoOfColumns(Context context) {
+    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+    System.out.println(displayMetrics.density);
+    //interesting means, I do not want it always just to be basically based on real life size.
+    //I want tablets to display more columns, but also display them bigger.
+    //density on phone might be around 2.5
+    //density on tablets might be around 1.0
+    //here it is basically making it MORE phone-ish number of columns on tablet, not just like 3x
+    float interestingWidth = (displayMetrics.widthPixels * 2) / (displayMetrics.density + 2.5f);
+    int scalingFactor = 200;
+    int noOfColumns = (int) (interestingWidth / scalingFactor);
+    if (noOfColumns < 2){
+      noOfColumns = 2;
+    }
+    return noOfColumns;
   }
 
 
