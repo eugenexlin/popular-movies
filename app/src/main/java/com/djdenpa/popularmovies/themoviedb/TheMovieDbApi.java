@@ -93,7 +93,35 @@ public class TheMovieDbApi {
     return null;
   }
 
+  /**
+   * There seems to be no paging on this endpoint
+   */
+  public static ArrayList<VideoInformation> GetMovieVideos(int movieId){
+    String path = "movie/" + movieId + "/videos";
+    Uri videosUri = BuildTheMovieDbUrl(path, null);
+
+    URL url;
+    ArrayList<VideoInformation> result = new ArrayList<>();
+    try {
+      url = new URL(videosUri.toString());
+      String httpResult = getResponseFromHttpUrl(url);
+      JSONObject videosJson = new JSONObject(httpResult);
+
+      JSONArray resultsJson = videosJson.getJSONArray("results");
+
+      for(int i=0; i<resultsJson.length(); i++){
+        JSONObject videoJson = resultsJson.getJSONObject(i);
+        result.add(new VideoInformation(videoJson));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+    return result;
+  }
+
   /** Builds a URL with the API key set.
+   * params = null for no query string params
    * @param path relative path after base URL. does not need starting slash.
    * @param params can be null
    * **/
