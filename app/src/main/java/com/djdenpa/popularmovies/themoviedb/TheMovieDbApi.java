@@ -120,6 +120,36 @@ public class TheMovieDbApi {
     return result;
   }
 
+  /**
+   * There is paging..
+   */
+  public static ArrayList<ReviewInformation> GetMovieReviews(int movieId, int page){
+    HashMap<String,String> queryString = new HashMap<>();
+    queryString.put("page", String.valueOf(page));
+
+    String path = "movie/" + movieId + "/reviews";
+    Uri videosUri = BuildTheMovieDbUrl(path, null);
+
+    URL url;
+    ArrayList<ReviewInformation> result = new ArrayList<>();
+    try {
+      url = new URL(videosUri.toString());
+      String httpResult = getResponseFromHttpUrl(url);
+      JSONObject reviewsJson = new JSONObject(httpResult);
+
+      JSONArray resultsJson = reviewsJson.getJSONArray("results");
+
+      for(int i=0; i<resultsJson.length(); i++){
+        JSONObject videoJson = resultsJson.getJSONObject(i);
+        result.add(new ReviewInformation(videoJson));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+    return result;
+  }
+
   /** Builds a URL with the API key set.
    * params = null for no query string params
    * @param path relative path after base URL. does not need starting slash.
