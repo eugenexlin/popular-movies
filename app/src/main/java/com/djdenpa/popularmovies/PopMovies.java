@@ -49,7 +49,7 @@ public class PopMovies extends AppCompatActivity {
 
     mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_posters);
 
-    int columns = calculateNoOfColumns(getBaseContext());
+    int columns = calculateNoOfColumns(this);
 
     final GridLayoutManager layoutManager
             = new GridLayoutManager(this, columns, GridLayoutManager.VERTICAL, false){
@@ -119,7 +119,6 @@ public class PopMovies extends AppCompatActivity {
    */
   public static int calculateNoOfColumns(Context context) {
     DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-    System.out.println(displayMetrics.density);
     //interesting means, I do not want it always just to be basically based on real life size.
     //I want tablets to display more columns, but also display them bigger.
     //density on phone might be around 2.5

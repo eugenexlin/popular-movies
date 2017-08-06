@@ -5,6 +5,9 @@
   <string name="highest_rated_header">Highest Rated</string>
   <string name="movie_details_header">Movie Details</string>
 
+  <string name="movie_trailers_header">Trailers:</string>
+  <string name="movie_other_videos_header">Other Videos:</string>
+
   <string name="discover_error_message">An error has occurred. Please try again later.</string>
 
   <string name="action_refresh">Refresh</string>

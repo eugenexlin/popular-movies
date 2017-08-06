@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Comparator;
 
 /**
  * Created by denpa on 7/30/2017.
@@ -42,8 +43,22 @@ public class VideoInformation {
         throw new UnsupportedOperationException("Unimplemented video site: " + site);
     }
   }
+  public String thumbnailUrl(){
+    switch(site.toUpperCase()){
+      case "YOUTUBE":
+        return "https://img.youtube.com/vi/" + key + "/default.jpg";
+      default:
+        return ""; //just don't load if not supported
+    }
+  }
 
 
+  public static class VideoInformationNameSorter implements Comparator<VideoInformation>{
+    @Override
+    public int compare(VideoInformation o1, VideoInformation o2) {
+      return o1.name.compareTo(o2.name);
+    }
+  }
 }
 
 
