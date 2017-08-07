@@ -74,20 +74,6 @@ public class MovieVideoItemsAdapter extends ArrayAdapter<VideoInformation> {
     return convertView;
   }
 
-
-  public MoviePosterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-    mContext = viewGroup.getContext();
-
-    int layoutIdForListItem = R.layout.video_item_layout;
-    LayoutInflater inflater = LayoutInflater.from(mContext);
-    boolean shouldAttachToParentImmediately = false;
-
-    View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-    MoviePosterViewHolder viewHolder = new MoviePosterViewHolder(view);
-
-    return viewHolder;
-  }
-
   @Override
   public int getCount() {
     return mVideoData.size();

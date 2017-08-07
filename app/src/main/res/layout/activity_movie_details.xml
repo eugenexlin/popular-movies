@@ -161,11 +161,19 @@
         android:layout_marginTop="12dp"
         app:srcCompat="@color/colorPrimary"/>
 
+    <ProgressBar
+        android:id="@+id/pb_videos"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/tv_trailers_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/movie_trailers_header"
+        android:visibility="gone"
         android:textSize="@dimen/header_text_size"
         />
 
@@ -181,6 +189,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/movie_other_videos_header"
+        android:visibility="gone"
         android:textSize="@dimen/header_text_size"
         />
 

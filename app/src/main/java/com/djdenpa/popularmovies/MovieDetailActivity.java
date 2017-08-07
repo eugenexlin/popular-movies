@@ -1,6 +1,7 @@
 package com.djdenpa.popularmovies;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -53,12 +55,14 @@ public class MovieDetailActivity extends AppCompatActivity{
 
   private boolean mLoadBigImage = false;
 
-  TextView mVideoTrailersHeader;
-  MovieVideoItemsAdapter mAdapterVideoTrailers;
-  ListView mListViewVideoTrailers;
-  TextView mVideoOthersHeader;
-  MovieVideoItemsAdapter mAdapterVideoOthers;
-  ListView mListViewVideoOthers;
+  private TextView mVideoTrailersHeader;
+  private MovieVideoItemsAdapter mAdapterVideoTrailers;
+  private ListView mListViewVideoTrailers;
+  private TextView mVideoOthersHeader;
+  private MovieVideoItemsAdapter mAdapterVideoOthers;
+  private ListView mListViewVideoOthers;
+
+  private ProgressBar mLoadingVideos;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,11 +116,19 @@ public class MovieDetailActivity extends AppCompatActivity{
     mAdapterVideoTrailers = new MovieVideoItemsAdapter(this, R.layout.movie_poster_item);
     mListViewVideoTrailers.setAdapter(mAdapterVideoTrailers);
     mVideoTrailersHeader = (TextView) findViewById(R.id.tv_trailers_header);
+    mListViewVideoTrailers.setOnItemClickListener(new VideoClickListener(mAdapterVideoTrailers.mVideoData));
+    //prevent it from auto scrolling down.
+    mListViewVideoTrailers.setFocusable(false);
 
     mListViewVideoOthers = (ListView) findViewById(R.id.lv_video_others);
     mAdapterVideoOthers = new MovieVideoItemsAdapter(this, R.layout.movie_poster_item);
     mListViewVideoOthers.setAdapter(mAdapterVideoOthers);
     mVideoOthersHeader = (TextView) findViewById(R.id.tv_other_videos_header);
+    mListViewVideoOthers.setOnItemClickListener(new VideoClickListener(mAdapterVideoOthers.mVideoData));
+    //prevent it from auto scrolling down.
+    mListViewVideoOthers.setFocusable(false);
+
+    mLoadingVideos = (ProgressBar) findViewById(R.id.pb_videos);
 
     new LoadMovieVideosTask().execute(mMovieId);
   }
@@ -126,6 +138,25 @@ public class MovieDetailActivity extends AppCompatActivity{
     mLoadingIndicator.setVisibility(View.GONE);
     mErrorMessage.setVisibility(View.VISIBLE);
     mErrorMessage.setText(message);
+  }
+
+  public class VideoClickListener implements ListView.OnItemClickListener{
+    ArrayList<VideoInformation> mReferenceData;
+    public VideoClickListener(ArrayList<VideoInformation> referenceData){
+      mReferenceData = referenceData;
+    }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      VideoInformation video = mReferenceData.get(position);
+      if (video != null){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(video.videoUrl()));
+
+        if(intent.resolveActivity(getPackageManager()) != null){
+          startActivity(intent);
+        }
+      }
+    }
   }
 
 
@@ -203,7 +234,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     @Override
     protected void onPreExecute() {
       super.onPreExecute();
-      //mLoadingIndicator.setVisibility(View.VISIBLE);
+      mLoadingVideos.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -218,7 +249,7 @@ public class MovieDetailActivity extends AppCompatActivity{
 
     @Override
     protected void onPostExecute(ArrayList<VideoInformation> videoData) {
-      //mLoadingIndicator.setVisibility(View.GONE);
+      mLoadingVideos.setVisibility(View.GONE);
       if (videoData != null) {
         VideoInformation.VideoInformationNameSorter sorter = new VideoInformation.VideoInformationNameSorter();
         Collections.sort(videoData, sorter);
