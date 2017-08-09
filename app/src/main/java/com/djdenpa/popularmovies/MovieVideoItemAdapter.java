@@ -21,11 +21,11 @@ import java.util.ArrayList;
  *
  */
 
-public class MovieVideoItemsAdapter extends ArrayAdapter<VideoInformation> {
+public class MovieVideoItemAdapter extends ArrayAdapter<VideoInformation> {
 
   public final ArrayList<VideoInformation> mVideoData = new ArrayList<>();
 
-  public MovieVideoItemsAdapter(@NonNull Context context, @LayoutRes int resource) {
+  public MovieVideoItemAdapter(@NonNull Context context, @LayoutRes int resource) {
     super(context, resource);
   }
 

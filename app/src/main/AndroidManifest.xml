@@ -22,11 +22,17 @@
       </intent-filter>
     </activity>
     <activity android:name=".MovieDetailActivity"
-              android:parentActivityName=".PopMovies" >
-      <!-- Parent activity meta-data to support 4.0 and lower -->
+              android:parentActivityName=".PopMovies"
+              android:launchMode="singleTop">
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"
           android:value=".PopMovies" />
+    </activity>
+    <activity android:name=".MovieReviewActivity"
+              android:parentActivityName=".MovieDetailActivity" >
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value=".MovieDetailActivity" />
     </activity>
   </application>
 

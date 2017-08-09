@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,6 +19,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 import com.djdenpa.popularmovies.themoviedb.VideoInformation;
@@ -56,10 +60,10 @@ public class MovieDetailActivity extends AppCompatActivity{
   private boolean mLoadBigImage = false;
 
   private TextView mVideoTrailersHeader;
-  private MovieVideoItemsAdapter mAdapterVideoTrailers;
+  private MovieVideoItemAdapter mAdapterVideoTrailers;
   private ListView mListViewVideoTrailers;
   private TextView mVideoOthersHeader;
-  private MovieVideoItemsAdapter mAdapterVideoOthers;
+  private MovieVideoItemAdapter mAdapterVideoOthers;
   private ListView mListViewVideoOthers;
 
   private ProgressBar mLoadingVideos;
@@ -113,7 +117,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     new LoadMovieDetailsTask().execute(mMovieId);
 
     mListViewVideoTrailers = (ListView) findViewById(R.id.lv_video_trailers);
-    mAdapterVideoTrailers = new MovieVideoItemsAdapter(this, R.layout.movie_poster_item);
+    mAdapterVideoTrailers = new MovieVideoItemAdapter(this, R.layout.movie_poster_item);
     mListViewVideoTrailers.setAdapter(mAdapterVideoTrailers);
     mVideoTrailersHeader = (TextView) findViewById(R.id.tv_trailers_header);
     mListViewVideoTrailers.setOnItemClickListener(new VideoClickListener(mAdapterVideoTrailers.mVideoData));
@@ -121,7 +125,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     mListViewVideoTrailers.setFocusable(false);
 
     mListViewVideoOthers = (ListView) findViewById(R.id.lv_video_others);
-    mAdapterVideoOthers = new MovieVideoItemsAdapter(this, R.layout.movie_poster_item);
+    mAdapterVideoOthers = new MovieVideoItemAdapter(this, R.layout.movie_poster_item);
     mListViewVideoOthers.setAdapter(mAdapterVideoOthers);
     mVideoOthersHeader = (TextView) findViewById(R.id.tv_other_videos_header);
     mListViewVideoOthers.setOnItemClickListener(new VideoClickListener(mAdapterVideoOthers.mVideoData));
@@ -225,6 +229,32 @@ public class MovieDetailActivity extends AppCompatActivity{
     }
   }
 
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.movie_detail_menu, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+
+    if (id == R.id.action_reviews) {
+
+      Class destinationClass = MovieReviewActivity.class;
+      Intent intentToStartReviewActivity = new Intent(this, destinationClass);
+      intentToStartReviewActivity.putExtra(MovieReviewActivity.MOVIE_ID_EXTRA, movie.movieId);
+      this.startActivity(intentToStartReviewActivity);
+
+      return true;
+    }
+    if (id == R.id.action_favorite) {
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
 
   /**
    * Run function to get every video for a movie.
