@@ -128,7 +128,7 @@ public class TheMovieDbApi {
     queryString.put("page", String.valueOf(page));
 
     String path = "movie/" + movieId + "/reviews";
-    Uri videosUri = BuildTheMovieDbUrl(path, null);
+    Uri videosUri = BuildTheMovieDbUrl(path, queryString);
 
     URL url;
     ArrayList<ReviewInformation> result = new ArrayList<>();

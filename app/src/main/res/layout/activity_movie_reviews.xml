@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
+
+  <TextView
+      android:id="@+id/tv_error_message"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="16dp"
+      android:text="@string/discover_error_message"
+      android:textSize="20sp"
+      android:textColor="#f00"
+      android:background="#ccffffff"
+      android:visibility="gone"
+      android:elevation="3dp"/>
+
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/rv_movie_reviews"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:padding="2dp"/>
+
+  <ProgressBar
+      android:id="@+id/pb_loading_indicator"
+      android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:layout_gravity="bottom|end"
+      android:visibility="gone"/>
 
 </LinearLayout>

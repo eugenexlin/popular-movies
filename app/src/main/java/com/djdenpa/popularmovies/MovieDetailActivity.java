@@ -93,7 +93,6 @@ public class MovieDetailActivity extends AppCompatActivity{
 
     Intent intentThatStartedThisActivity = getIntent();
 
-    // COMPLETED (2) Display the weather forecast that was passed from MainActivity
     if (intentThatStartedThisActivity != null) {
       if (intentThatStartedThisActivity.hasExtra(MOVIE_NAME_EXTRA)) {
         String movieName = intentThatStartedThisActivity.getStringExtra(MOVIE_NAME_EXTRA);

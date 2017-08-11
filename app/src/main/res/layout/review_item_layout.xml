@@ -4,7 +4,9 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/normal_text_size"
+    >
 
   <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,23 +29,27 @@
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5"/>
 
     <TextView
         android:id="@+id/tv_author_first_char"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:textColor="@android:color/white"
         android:textSize="@dimen/large_header_text_size"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_user_circle"
         app:layout_constraintLeft_toLeftOf="@+id/iv_user_circle"
         app:layout_constraintRight_toRightOf="@+id/iv_user_circle"
+        tools:text="E"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_user_circle"
+        android:layout_marginBottom="0dp"
         app:layout_constraintTop_toTopOf="@+id/iv_user_circle"
-        tools:text="E"/>
+        android:layout_marginTop="0dp"
+        app:layout_constraintVertical_bias="0.42000002"/>
 
   </android.support.constraint.ConstraintLayout>
 
@@ -64,6 +70,7 @@
         tools:text="Best movie of the year!!"/>
 
     <LinearLayout
+        android:layout_marginTop="@dimen/normal_text_size"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">

@@ -36,8 +36,8 @@ public class MovieReviewItemAdapter extends RecyclerView.Adapter<MovieReviewView
     ReviewInformation review = mReviewData.get(position);
 
     holder.mReviewAuthor.setText(review.author);
-    if (review.author == ""){
-      holder.mReviewAuthorFirstChar.setText(review.author.charAt(0));
+    if (review.author != null){
+      holder.mReviewAuthorFirstChar.setText(String.valueOf(review.author.charAt(0)).toUpperCase());
     }
     //no title... maybe some other day
     //holder.mReviewTitle.setText(review.content);
@@ -45,8 +45,37 @@ public class MovieReviewItemAdapter extends RecyclerView.Adapter<MovieReviewView
 
   }
 
+  private OnLoadMoreListener mOnLoadMoreListener;
+
+  public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+    this.mOnLoadMoreListener = onLoadMoreListener;
+  }
+
+  public void tryRunOnLoadMoreListener(){
+    if (mOnLoadMoreListener != null){
+      mOnLoadMoreListener.onLoadMore();
+    }
+  }
+
+  public void clearReviewData(){
+    mReviewData.clear();
+  }
+
+  public void appendReviewData(ArrayList<ReviewInformation> movies){
+    if (movies == null){
+      return;
+    }
+    if (movies.size() <= 0){
+      return;
+    }
+    for( ReviewInformation movie : movies){
+      mReviewData.add(movie);
+    }
+    notifyDataSetChanged();
+  }
+
   @Override
   public int getItemCount() {
-    return 0;
+    return mReviewData.size();
   }
 }
