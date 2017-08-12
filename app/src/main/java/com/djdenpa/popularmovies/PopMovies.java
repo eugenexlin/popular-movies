@@ -212,7 +212,7 @@ public class PopMovies extends AppCompatActivity {
           int id = item.getItemId();
 
           if (id == R.id.sort_favorite) {
-            Log.i("Test","fav");
+            setTitle(R.string.favorite_header);
           }
           if (id == R.id.sort_popular) {
             sort = ApiParams.MovieSort.POPULARITY;
