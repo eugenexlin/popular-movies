@@ -6,8 +6,10 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -198,20 +200,40 @@ public class PopMovies extends AppCompatActivity {
       return true;
     }
     if (id == R.id.action_sort) {
-      if (sort == ApiParams.MovieSort.POPULARITY){
-        sort = ApiParams.MovieSort.RATING;
-        setTitle(R.string.highest_rated_header);
-      }else if (sort == ApiParams.MovieSort.RATING){
-        sort = ApiParams.MovieSort.POPULARITY;
-        setTitle(R.string.popular_header);
-      }
-      mMoviePosterAdapter.sort = sort;
-      PerformNewDiscoverMovies();
+      View menuItemView = findViewById(id);
+      PopupMenu popup = new PopupMenu(this, menuItemView);
+      //Inflating the Popup using xml file
+      popup.getMenuInflater()
+              .inflate(R.menu.home_sort_menu, popup.getMenu());
+
+      //registering popup with OnMenuItemClickListener
+      popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        public boolean onMenuItemClick(MenuItem item) {
+          int id = item.getItemId();
+
+          if (id == R.id.sort_favorite) {
+            Log.i("Test","fav");
+          }
+          if (id == R.id.sort_popular) {
+            sort = ApiParams.MovieSort.POPULARITY;
+            setTitle(R.string.popular_header);
+          }
+          if (id == R.id.sort_highest_rated) {
+            sort = ApiParams.MovieSort.RATING;
+            setTitle(R.string.highest_rated_header);
+          }
+          mMoviePosterAdapter.sort = sort;
+          PerformNewDiscoverMovies();
+          return true;
+        }
+      });
+      popup.show(); //showing popup menu
       return true;
     }
 
     return super.onOptionsItemSelected(item);
   }
+
 
   /**
    * Run the function to get the ArrayList of MovieInformation objects.

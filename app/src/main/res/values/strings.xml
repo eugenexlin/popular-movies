@@ -3,6 +3,7 @@
 
   <string name="popular_header">Popular</string>
   <string name="highest_rated_header">Highest Rated</string>
+  <string name="favorite_header">Favorites</string>
   <string name="movie_details_header">Movie Details</string>
   <string name="movie_review_header">Reviews</string>
 
