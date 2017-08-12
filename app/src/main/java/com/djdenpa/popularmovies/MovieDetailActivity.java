@@ -66,6 +66,8 @@ public class MovieDetailActivity extends AppCompatActivity{
   private MovieVideoItemAdapter mAdapterVideoOthers;
   private ListView mListViewVideoOthers;
 
+  private ImageView mHorizontalLine;
+
   private ProgressBar mLoadingVideos;
 
   @Override
@@ -90,6 +92,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     mMovieSynopsis = (TextView) findViewById(R.id.tv_movie_synopsis);
     mMovieDuration = (TextView) findViewById(R.id.tv_movie_duration);
     mMovieReleaseDate = (TextView) findViewById(R.id.tv_movie_release_date);
+    mHorizontalLine = (ImageView) findViewById(R.id.iv_horizontal);
 
     Intent intentThatStartedThisActivity = getIntent();
 
@@ -243,7 +246,7 @@ public class MovieDetailActivity extends AppCompatActivity{
 
       Class destinationClass = MovieReviewActivity.class;
       Intent intentToStartReviewActivity = new Intent(this, destinationClass);
-      intentToStartReviewActivity.putExtra(MovieReviewActivity.MOVIE_ID_EXTRA, movie.movieId);
+      intentToStartReviewActivity.putExtra(MovieReviewActivity.MOVIE_ID_EXTRA, mMovieId);
       this.startActivity(intentToStartReviewActivity);
 
       return true;
@@ -284,6 +287,10 @@ public class MovieDetailActivity extends AppCompatActivity{
         Collections.sort(videoData, sorter);
         ArrayList<VideoInformation> videoTrailers = new ArrayList<>();
         ArrayList<VideoInformation> videoOthers = new ArrayList<>();
+
+        if (videoData.size() > 0) {
+          mHorizontalLine.setVisibility(View.VISIBLE);
+        }
         for (VideoInformation video : videoData){
           if(video.type.equals("Trailer")) {
             videoTrailers.add(video);

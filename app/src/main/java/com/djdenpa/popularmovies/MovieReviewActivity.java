@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.djdenpa.popularmovies.themoviedb.ReviewInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
@@ -27,6 +28,8 @@ public class MovieReviewActivity extends AppCompatActivity {
 
   private MovieReviewItemAdapter mReviewAdapter;
   private ProgressBar mLoadingIndicator;
+  private TextView mErrorMessage;
+  private TextView mNoReviewMessage;
   private RecyclerView mRecyclerView;
 
   private DividerItemDecoration mDividerItemDecoration;
@@ -56,7 +59,8 @@ public class MovieReviewActivity extends AppCompatActivity {
 
     mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
     mRecyclerView = (RecyclerView) findViewById(R.id.rv_movie_reviews);
-
+    mErrorMessage = (TextView) findViewById(R.id.tv_error_message);
+    mNoReviewMessage = (TextView) findViewById(R.id.tv_no_reviews);
 
     mReviewAdapter = new MovieReviewItemAdapter();
     mReviewAdapter.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -148,15 +152,20 @@ public class MovieReviewActivity extends AppCompatActivity {
     @Override
     protected void onPostExecute(ArrayList<ReviewInformation> reviewData) {
       mLoadingIndicator.setVisibility(View.GONE);
+      mNoReviewMessage.setVisibility(View.GONE);
+      mErrorMessage.setVisibility(View.GONE);
       mRecyclerView.setVisibility(View.VISIBLE);
       if (reviewData != null) {
         if (reviewData.size() <= 0){
+          if (mReviewAdapter.mReviewData.size() <= 0){
+            mNoReviewMessage.setVisibility(View.VISIBLE);
+          }
           //perhaps no more results..
           isOutOfReviews = true;
         }
         mReviewAdapter.appendReviewData(reviewData);
       } else {
-        //TODO showErrorMessage();
+        mErrorMessage.setVisibility(View.VISIBLE);
       }
       isLoadingMoreMovies = false;
     }

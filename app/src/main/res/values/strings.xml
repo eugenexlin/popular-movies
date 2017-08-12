@@ -14,6 +14,8 @@
 
   <string name="discover_error_message">An error has occurred. Please try again later.</string>
 
+  <string name="no_reviews_message">No Reviews</string>
+
   <string name="action_refresh">Refresh</string>
   <string name="action_sort">Sort</string>
 

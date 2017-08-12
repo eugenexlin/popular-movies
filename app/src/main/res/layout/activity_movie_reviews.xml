@@ -6,6 +6,16 @@
               android:layout_height="match_parent">
 
   <TextView
+      android:id="@+id/tv_no_reviews"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="16dp"
+      android:text="@string/no_reviews_message"
+      android:textSize="@dimen/normal_text_size"
+      android:textColor="#888"
+      android:visibility="gone"/>
+
+  <TextView
       android:id="@+id/tv_error_message"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
