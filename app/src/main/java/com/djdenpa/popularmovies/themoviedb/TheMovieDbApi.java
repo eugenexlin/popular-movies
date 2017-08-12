@@ -76,6 +76,18 @@ public class TheMovieDbApi {
    * takes in id, and returns a single MovieInformation object
    */
   public static MovieInformation GetMovieById(int id){
+    try {
+      String httpResult = GetMovieJsonById(id);
+      JSONObject movieJson = new JSONObject(httpResult);
+
+      return new MovieInformation(movieJson, false);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public static String GetMovieJsonById(int id){
     HashMap<String,String> queryString = new HashMap<>();
     String path = "movie/" + id;
     Uri discoverUri = BuildTheMovieDbUrl(path, queryString);
@@ -84,9 +96,7 @@ public class TheMovieDbApi {
     try {
       url = new URL(discoverUri.toString());
       String httpResult = getResponseFromHttpUrl(url);
-      JSONObject movieJson = new JSONObject(httpResult);
-
-      return new MovieInformation(movieJson, false);
+      return httpResult;
     } catch (Exception e) {
       e.printStackTrace();
     }

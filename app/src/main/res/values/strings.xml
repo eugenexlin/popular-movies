@@ -7,6 +7,7 @@
   <string name="movie_details_header">Movie Details</string>
   <string name="movie_review_header">Reviews</string>
 
+  <string name="favorite_null_movie_id">Can not favorite invalid movie ID.</string>
 
   <string name="movie_trailers_header">Trailers:</string>
   <string name="movie_other_videos_header">Other Videos:</string>
@@ -22,6 +23,7 @@
 
   <string name="action_reviews">Reviews</string>
   <string name="action_favorite">Favorite</string>
+  <string name="action_remove_favorite">Remove Favorite</string>
 
 
   <string name="poster_content_description">Movie Poster</string>

@@ -1,11 +1,18 @@
 package com.djdenpa.popularmovies;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuView;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,8 +25,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.djdenpa.popularmovies.themoviedb.ApiParams;
+import com.djdenpa.popularmovies.database.MovieContract;
+import com.djdenpa.popularmovies.database.MovieDbHelper;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 import com.djdenpa.popularmovies.themoviedb.VideoInformation;
@@ -70,6 +79,8 @@ public class MovieDetailActivity extends AppCompatActivity{
 
   private ProgressBar mLoadingVideos;
 
+  private Context mContext;
+
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,6 +92,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     }
 
     setTitle(R.string.movie_details_header);
+    mContext = this;
 
     mMovieTitle = (TextView) findViewById(R.id.tv_movie_title);
     mMoviePoster = (ImageView) findViewById(R.id.iv_movie_poster);
@@ -137,6 +149,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     mLoadingVideos = (ProgressBar) findViewById(R.id.pb_videos);
 
     new LoadMovieVideosTask().execute(mMovieId);
+
   }
 
 
@@ -235,8 +248,19 @@ public class MovieDetailActivity extends AppCompatActivity{
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.movie_detail_menu, menu);
+
+    MovieDbHelper dbHelper = new MovieDbHelper(mContext);
+    SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+    MenuItem menuFav = menu.findItem(R.id.action_favorite);
+    if (checkHasFavorite(db)){
+      menuFav.setTitle(R.string.action_remove_favorite);
+    }
+    db.close();
+
     return true;
   }
+
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -252,11 +276,61 @@ public class MovieDetailActivity extends AppCompatActivity{
       return true;
     }
     if (id == R.id.action_favorite) {
+      if (mMovieId < 0){
+        Toast.makeText(this, R.string.favorite_null_movie_id,Toast.LENGTH_SHORT).show();
+        return true;
+      }
+      //avoid spam
+      View menuView = findViewById(id);
+      menuView.setEnabled(false);
+      toggleFavorite();
       return true;
     }
 
     return super.onOptionsItemSelected(item);
   }
+
+  public void toggleFavorite(){
+    new AsyncTask<Void, Void, String>() {
+      protected String doInBackground(Void... params) {
+        MovieDbHelper dbHelper = new MovieDbHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+          if (checkHasFavorite(db)) {
+            //remove from favorite
+            db.delete(MovieContract.MovieInformationEntry.TABLE_NAME, MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
+            db.delete(MovieContract.MoviePosterEntry.TABLE_NAME, MovieContract.MoviePosterEntry.COLUMN_MOVIE_ID + "=" + mMovieId, null);
+            return "Movie removed from favorites.";
+          } else {
+            //favorite
+            String movieJson = TheMovieDbApi.GetMovieJsonById(mMovieId);
+
+            ContentValues cv = new ContentValues();
+            cv.put(MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID, mMovieId);
+            cv.put(MovieContract.MovieInformationEntry.COLUMN_MOVIE_JSON, movieJson);
+            db.insert(MovieContract.MovieInformationEntry.TABLE_NAME, null, cv);
+            return "Movie saved to favorites.";
+          }
+        }catch(Exception ex){
+          ex.printStackTrace();
+          return "An error has occurred";
+        }finally{
+          db.close();
+        }
+      }
+      protected void onPostExecute(String msg) {
+        Toast.makeText(mContext, msg ,Toast.LENGTH_SHORT).show();
+      }
+    }.execute();
+
+  }
+
+  public boolean checkHasFavorite(SQLiteDatabase db){
+    String countQuery = MovieContract.MovieInformationEntry.TABLE_NAME + " WHERE " +MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID + " = " + mMovieId;
+    long cnt =  DatabaseUtils.queryNumEntries(db, countQuery);
+    return cnt >= 1;
+  }
+
 
   /**
    * Run function to get every video for a movie.

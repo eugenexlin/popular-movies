@@ -10,11 +10,11 @@ import com.djdenpa.popularmovies.database.MovieContract.*;
  * Created by denpa on 8/12/2017.
  */
 
-public class MovieDbHelpter extends SQLiteOpenHelper {
+public class MovieDbHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME = "movie.db";
   private static final int DATABASE_VERSION = 1;
 
-  public MovieDbHelpter(Context context){
+  public MovieDbHelper(Context context){
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
@@ -23,13 +23,13 @@ public class MovieDbHelpter extends SQLiteOpenHelper {
     final String SQL_CREATE_MOVIE_INFO_TABLE = "CREATE TABLE " + MovieInformationEntry.TABLE_NAME + " (" +
             MovieInformationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             MovieInformationEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-            MovieInformationEntry.COLUMN_MOVIE_JSON + " TEXT NOT NULL, " +
+            MovieInformationEntry.COLUMN_MOVIE_JSON + " TEXT NOT NULL " +
         "); ";
-    final String SQL_CREATE_MOVIE_POSTER_TABLE = "CREATE TABLE " + MovieInformationEntry.TABLE_NAME + " (" +
+    final String SQL_CREATE_MOVIE_POSTER_TABLE = "CREATE TABLE " + MoviePosterEntry.TABLE_NAME + " (" +
             MoviePosterEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             MoviePosterEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
             MoviePosterEntry.COLUMN_POSTER_PATH + " STRING NOT NULL, " +
-            MoviePosterEntry.COLUMN_POSTER_BYTES + " BLOB NOT NULL, " +
+            MoviePosterEntry.COLUMN_POSTER_BYTES + " BLOB NOT NULL " +
             "); ";
 
     db.execSQL(SQL_CREATE_MOVIE_INFO_TABLE);
