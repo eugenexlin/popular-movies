@@ -29,10 +29,13 @@ import android.widget.Toast;
 
 import com.djdenpa.popularmovies.database.MovieContract;
 import com.djdenpa.popularmovies.database.MovieDbHelper;
+import com.djdenpa.popularmovies.database.NetworkUtils;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 import com.djdenpa.popularmovies.themoviedb.VideoInformation;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -309,6 +312,25 @@ public class MovieDetailActivity extends AppCompatActivity{
             cv.put(MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID, mMovieId);
             cv.put(MovieContract.MovieInformationEntry.COLUMN_MOVIE_JSON, movieJson);
             db.insert(MovieContract.MovieInformationEntry.TABLE_NAME, null, cv);
+
+            MovieInformation movie = new MovieInformation(new JSONObject(movieJson), false);
+            byte[] imageData;
+
+            //we might not need the low res one, all high res whee
+//            imageData = NetworkUtils.getBitmapBytesFromURL(movie.posterUrlSmall);
+//            ContentValues cvPoster = new ContentValues();
+//            cvPoster.put(MovieContract.MoviePosterEntry.COLUMN_MOVIE_ID, mMovieId);
+//            cvPoster.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_PATH, movie.posterUrlSmall);
+//            cvPoster.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_BYTES, imageData);
+//            db.insert(MovieContract.MoviePosterEntry.TABLE_NAME, null, cvPoster);
+
+            imageData = NetworkUtils.getBitmapBytesFromURL(movie.posterUrlLarge);
+            ContentValues cvPosterBig = new ContentValues();
+            cvPosterBig.put(MovieContract.MoviePosterEntry.COLUMN_MOVIE_ID, mMovieId);
+            cvPosterBig.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_PATH, movie.posterUrlLarge);
+            cvPosterBig.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_BYTES, imageData);
+            db.insert(MovieContract.MoviePosterEntry.TABLE_NAME, null, cvPosterBig);
+
             return "Movie saved to favorites.";
           }
         }catch(Exception ex){
@@ -330,6 +352,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     long cnt =  DatabaseUtils.queryNumEntries(db, countQuery);
     return cnt >= 1;
   }
+
 
 
   /**

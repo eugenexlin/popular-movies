@@ -1,8 +1,10 @@
 package com.djdenpa.popularmovies.themoviedb;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.djdenpa.popularmovies.BuildConfig;
+import com.djdenpa.popularmovies.database.MovieDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

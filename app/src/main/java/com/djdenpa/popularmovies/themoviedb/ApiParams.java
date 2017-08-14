@@ -12,7 +12,8 @@ public class ApiParams {
 
   public enum MovieSort{
     POPULARITY,
-    RATING
+    RATING,
+    FAVORITE
   }
 
 }

@@ -2,15 +2,27 @@ package com.djdenpa.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.djdenpa.popularmovies.database.MovieContract;
+import com.djdenpa.popularmovies.database.MovieDbHelper;
+import com.djdenpa.popularmovies.database.NetworkUtils;
 import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -58,14 +70,22 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
     holder.mRatingBar.setMax(100);
     holder.mRatingBar.setProgress(rate);
 
-    Picasso.with(mContext).load(movie.posterUrlSmall).into(holder.mMoviePoster, new com.squareup.picasso.Callback() {
-      @Override
-      public void onSuccess() {
-      }
-      @Override
-      public void onError() {
-      }
-    });
+    if (sort == ApiParams.MovieSort.FAVORITE) {
+      //use db to fetch picture
+      holder.mMoviePoster.setImageResource(android.R.color.transparent);
+      new NetworkUtils.LoadThumbnail(mContext, holder.mMoviePoster, movie).execute();
+
+    }else{
+      //normal
+      Picasso.with(mContext).load(movie.posterUrlSmall).into(holder.mMoviePoster, new com.squareup.picasso.Callback() {
+        @Override
+        public void onSuccess() {
+        }
+        @Override
+        public void onError() {
+        }
+      });
+    }
   }
 
   public void appendMovieData(ArrayList<MovieInformation> movies){
@@ -110,15 +130,19 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
     }
   }
 
+
+
   @Override
   public void onClick(int position) {
     MovieInformation movie = mMovieData.get(position);
     Class destinationClass = MovieDetailActivity.class;
     Intent intentToStartDetailActivity = new Intent(mContext, destinationClass);
-    // COMPLETED (1) Pass the weather to the DetailActivity
+
     intentToStartDetailActivity.putExtra(MovieDetailActivity.MOVIE_NAME_EXTRA, movie.originalTitle);
     intentToStartDetailActivity.putExtra(MovieDetailActivity.MOVIE_ID_EXTRA, movie.movieId);
     mContext.startActivity(intentToStartDetailActivity);
 
   }
+
+
 }

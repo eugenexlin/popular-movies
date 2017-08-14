@@ -1,6 +1,8 @@
 package com.djdenpa.popularmovies;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -17,9 +19,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.djdenpa.popularmovies.database.MovieContract;
+import com.djdenpa.popularmovies.database.MovieDbHelper;
 import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -41,6 +48,7 @@ public class PopMovies extends AppCompatActivity {
   private final int mLoadMoreThreshold = 6;
   private boolean isLoadingMoreMovies = false;
   private boolean allowLoadingMoreMovies = true;
+  private boolean noMoreMovies = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +96,9 @@ public class PopMovies extends AppCompatActivity {
       @Override
       public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+        if (noMoreMovies){
+          return;
+        }
         int movieCount = layoutManager.getItemCount();
         int lastVisibleIndex = layoutManager.findLastVisibleItemPosition();
         if (!isLoadingMoreMovies && movieCount <= (lastVisibleIndex + mLoadMoreThreshold)) {
@@ -142,6 +153,8 @@ public class PopMovies extends AppCompatActivity {
    */
   private void PerformNewDiscoverMovies(){
     mPageNum = 0;
+
+    noMoreMovies = false;
 
     //this is if there is a background request for loading another page,
     //we don't want it to do anything when it completes.
@@ -212,6 +225,7 @@ public class PopMovies extends AppCompatActivity {
           int id = item.getItemId();
 
           if (id == R.id.sort_favorite) {
+            sort = ApiParams.MovieSort.FAVORITE;
             setTitle(R.string.favorite_header);
           }
           if (id == R.id.sort_popular) {
@@ -249,7 +263,12 @@ public class PopMovies extends AppCompatActivity {
     @Override
     protected ArrayList<MovieInformation> doInBackground(ApiParams... params) {
       try {
-        return TheMovieDbApi.QueryMovies(params[0]);
+        ApiParams param = params[0];
+        if (param.sort == ApiParams.MovieSort.FAVORITE){
+          return queryMoviesFromDatabase(param);
+        }else{
+          return TheMovieDbApi.QueryMovies(param);
+        }
       } catch (Exception e) {
         e.printStackTrace();
         return null;
@@ -269,5 +288,33 @@ public class PopMovies extends AppCompatActivity {
       }
       isLoadingMoreMovies = false;
     }
+  }
+
+  protected ArrayList<MovieInformation> queryMoviesFromDatabase(ApiParams params){
+    MovieDbHelper dbHelper = new MovieDbHelper(this);
+    SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+    Cursor cursor = db.query(MovieContract.MovieInformationEntry.TABLE_NAME,
+        null,
+        null,
+        null,
+        null,
+        null,
+        MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID);
+
+    ArrayList<MovieInformation> result = new ArrayList<>();
+    for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+      String movieJson = cursor.getString(cursor.getColumnIndex(MovieContract.MovieInformationEntry.COLUMN_MOVIE_JSON));
+      try {
+        result.add(new MovieInformation(new JSONObject(movieJson), false));
+      } catch (Exception e) {
+        e.printStackTrace();
+        //consider deleting invalid column..
+      }
+    }
+    cursor.close();
+
+    noMoreMovies = true;
+    return result;
   }
 }
