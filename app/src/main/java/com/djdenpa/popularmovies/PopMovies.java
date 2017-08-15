@@ -1,8 +1,8 @@
 package com.djdenpa.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,12 +19,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.djdenpa.popularmovies.database.MovieContract;
-import com.djdenpa.popularmovies.database.MovieDbHelper;
 import com.djdenpa.popularmovies.themoviedb.ApiParams;
 import com.djdenpa.popularmovies.themoviedb.MovieInformation;
 import com.djdenpa.popularmovies.themoviedb.TheMovieDbApi;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -146,6 +143,12 @@ public class PopMovies extends AppCompatActivity {
     return noOfColumns;
   }
 
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+
+  }
 
   /**
    * This function is called to initialize a fresh search on page 1 of the API.
