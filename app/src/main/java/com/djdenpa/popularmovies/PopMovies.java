@@ -68,6 +68,7 @@ public class PopMovies extends AppCompatActivity {
         state.mMovieData = mMoviePosterAdapter.mMovieData;
         state.mPageNum = mPageNum;
         state.mSort = sort.name();
+        state.mNoMoreMovies = noMoreMovies;
         return state;
       }
 
@@ -83,6 +84,7 @@ public class PopMovies extends AppCompatActivity {
           }
           mPageNum = movieState.mPageNum;
           sort = ApiParams.MovieSort.valueOf( movieState.mSort);
+          noMoreMovies = movieState.mNoMoreMovies;
           mMoviePosterAdapter.sort = sort;
         }
       }

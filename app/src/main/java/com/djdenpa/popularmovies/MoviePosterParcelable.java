@@ -17,6 +17,7 @@ public class MoviePosterParcelable implements Parcelable {
   public int mScrollPosition;
   public int mPageNum;
   public String mSort;
+  public boolean mNoMoreMovies;
   public ArrayList<MovieInformation> mMovieData;
 
   public MoviePosterParcelable() {
@@ -26,6 +27,7 @@ public class MoviePosterParcelable implements Parcelable {
     mScrollPosition = in.readInt();
     mPageNum = in.readInt();
     mSort = in.readString();
+    mNoMoreMovies = in.readInt() != 0;
     mMovieData = (ArrayList<MovieInformation>) in.readArrayList(null);
   }
 
@@ -52,6 +54,7 @@ public class MoviePosterParcelable implements Parcelable {
     dest.writeInt(mScrollPosition);
     dest.writeInt(mPageNum);
     dest.writeString(mSort);
+    dest.writeInt((mNoMoreMovies ? 1 : 0));
     dest.writeList(mMovieData);
   }
 
