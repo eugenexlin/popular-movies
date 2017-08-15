@@ -140,6 +140,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterViewHold
 
     intentToStartDetailActivity.putExtra(MovieDetailActivity.MOVIE_NAME_EXTRA, movie.originalTitle);
     intentToStartDetailActivity.putExtra(MovieDetailActivity.MOVIE_ID_EXTRA, movie.movieId);
+    intentToStartDetailActivity.putExtra(MovieDetailActivity.MOVIE_IS_FAVORITE, sort == ApiParams.MovieSort.FAVORITE);
     mContext.startActivity(intentToStartDetailActivity);
 
   }

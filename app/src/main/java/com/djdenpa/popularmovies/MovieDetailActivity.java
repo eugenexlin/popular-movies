@@ -53,6 +53,7 @@ public class MovieDetailActivity extends AppCompatActivity{
 
   public static final String MOVIE_NAME_EXTRA = "MovieDetailActivity_MOVIE_NAME_EXTRA";
   public static final String MOVIE_ID_EXTRA = "MovieDetailActivity_MOVIE_ID_EXTRA";
+  public static final String MOVIE_IS_FAVORITE = "MovieDetailActivity_MOVIE_IS_FAVORITE";
 
   private TextView mMovieTitle;
   private TextView mErrorMessage;
@@ -83,6 +84,8 @@ public class MovieDetailActivity extends AppCompatActivity{
   private ProgressBar mLoadingVideos;
 
   private Context mContext;
+
+  private boolean shouldLoadFromFavorite = false;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,6 +122,10 @@ public class MovieDetailActivity extends AppCompatActivity{
       if (intentThatStartedThisActivity.hasExtra(MOVIE_ID_EXTRA)) {
         mMovieId = intentThatStartedThisActivity.getIntExtra(MOVIE_ID_EXTRA,-1);
       }
+      if (intentThatStartedThisActivity.hasExtra(MOVIE_IS_FAVORITE)) {
+        shouldLoadFromFavorite = intentThatStartedThisActivity.getBooleanExtra(MOVIE_IS_FAVORITE, false);
+      }
+
     }
 
     DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
@@ -197,7 +204,28 @@ public class MovieDetailActivity extends AppCompatActivity{
     @Override
     protected MovieInformation doInBackground(Integer... movieId) {
       try {
-        return TheMovieDbApi.GetMovieById(movieId[0]);
+        if (shouldLoadFromFavorite){
+
+          String whereClause = MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID + " = ?";
+          String[] whereArgs = new String[] {
+                  String.valueOf(movieId[0])
+          };
+
+          Cursor cursor = mContext.getContentResolver().query(
+                  MovieContract.MovieInformationEntry.CONTENT_URI,
+                  null,
+                  whereClause,
+                  whereArgs,
+                  null
+                  );
+          if (cursor != null && cursor.moveToFirst()){
+            String movieJson =  cursor.getString(cursor.getColumnIndex(MovieContract.MovieInformationEntry.COLUMN_MOVIE_JSON));
+            return new MovieInformation(new JSONObject(movieJson), false);
+          }
+          return null;
+        }else{
+          return TheMovieDbApi.GetMovieById(movieId[0]);
+        }
       } catch (Exception e) {
         e.printStackTrace();
         return null;
@@ -225,20 +253,24 @@ public class MovieDetailActivity extends AppCompatActivity{
           mMovieReleaseDate.setText(String.format(Locale.US, "Release Date: %s", dfRelease.format(movieData.releaseDate)));
         }
 
-        String loadUrl;
-        if (mLoadBigImage){
-          loadUrl = movieData.posterUrlLarge;
+        if (shouldLoadFromFavorite){
+          new NetworkUtils.LoadThumbnail(mContext, mMoviePoster, movie).execute();
         }else{
-          loadUrl = movieData.posterUrlSmall;
+          String loadUrl;
+          if (mLoadBigImage){
+            loadUrl = movieData.posterUrlLarge;
+          }else{
+            loadUrl = movieData.posterUrlSmall;
+          }
+          Picasso.with(getBaseContext()).load(loadUrl).into(mMoviePoster, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+            }
+            @Override
+            public void onError() {
+            }
+          });
         }
-        Picasso.with(getBaseContext()).load(loadUrl).into(mMoviePoster, new com.squareup.picasso.Callback() {
-          @Override
-          public void onSuccess() {
-          }
-          @Override
-          public void onError() {
-          }
-        });
 
 
       } else {
@@ -311,23 +343,15 @@ public class MovieDetailActivity extends AppCompatActivity{
             ContentValues cv = new ContentValues();
             cv.put(MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID, mMovieId);
             cv.put(MovieContract.MovieInformationEntry.COLUMN_MOVIE_JSON, movieJson);
+
             db.insert(MovieContract.MovieInformationEntry.TABLE_NAME, null, cv);
 
             MovieInformation movie = new MovieInformation(new JSONObject(movieJson), false);
             byte[] imageData;
 
-            //we might not need the low res one, all high res whee
-//            imageData = NetworkUtils.getBitmapBytesFromURL(movie.posterUrlSmall);
-//            ContentValues cvPoster = new ContentValues();
-//            cvPoster.put(MovieContract.MoviePosterEntry.COLUMN_MOVIE_ID, mMovieId);
-//            cvPoster.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_PATH, movie.posterUrlSmall);
-//            cvPoster.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_BYTES, imageData);
-//            db.insert(MovieContract.MoviePosterEntry.TABLE_NAME, null, cvPoster);
-
             imageData = NetworkUtils.getBitmapBytesFromURL(movie.posterUrlLarge);
             ContentValues cvPosterBig = new ContentValues();
             cvPosterBig.put(MovieContract.MoviePosterEntry.COLUMN_MOVIE_ID, mMovieId);
-            cvPosterBig.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_PATH, movie.posterUrlLarge);
             cvPosterBig.put(MovieContract.MoviePosterEntry.COLUMN_POSTER_BYTES, imageData);
             db.insert(MovieContract.MoviePosterEntry.TABLE_NAME, null, cvPosterBig);
 

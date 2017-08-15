@@ -291,16 +291,13 @@ public class PopMovies extends AppCompatActivity {
   }
 
   protected ArrayList<MovieInformation> queryMoviesFromDatabase(ApiParams params){
-    MovieDbHelper dbHelper = new MovieDbHelper(this);
-    SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-    Cursor cursor = db.query(MovieContract.MovieInformationEntry.TABLE_NAME,
-        null,
-        null,
-        null,
-        null,
-        null,
-        MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID);
+    Cursor cursor = this.getContentResolver().query(
+            MovieContract.MovieInformationEntry.CONTENT_URI,
+            null,
+            null,
+            null,
+            MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID);
 
     ArrayList<MovieInformation> result = new ArrayList<>();
     for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {

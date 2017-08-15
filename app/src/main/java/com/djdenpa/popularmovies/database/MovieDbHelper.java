@@ -12,7 +12,7 @@ import com.djdenpa.popularmovies.database.MovieContract.*;
 
 public class MovieDbHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME = "movie.db";
-  private static final int DATABASE_VERSION = 1;
+  private static final int DATABASE_VERSION = 2;
 
   public MovieDbHelper(Context context){
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,7 +28,6 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     final String SQL_CREATE_MOVIE_POSTER_TABLE = "CREATE TABLE " + MoviePosterEntry.TABLE_NAME + " (" +
             MoviePosterEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             MoviePosterEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-            MoviePosterEntry.COLUMN_POSTER_PATH + " STRING NOT NULL, " +
             MoviePosterEntry.COLUMN_POSTER_BYTES + " BLOB NOT NULL " +
             "); ";
 

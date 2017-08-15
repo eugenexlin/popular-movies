@@ -53,25 +53,19 @@ public class NetworkUtils {
     protected Bitmap doInBackground(Void... params) {
       Bitmap result = null;
 
-      MovieDbHelper dbHelper = new MovieDbHelper(mContext);
-      SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-      String whereClause = MovieContract.MoviePosterEntry.COLUMN_MOVIE_ID + " = ? OR " +
-              MovieContract.MoviePosterEntry.COLUMN_POSTER_PATH + " = ?";
+      String whereClause = MovieContract.MoviePosterEntry.COLUMN_MOVIE_ID + " = ?";
       String[] whereArgs = new String[] {
-              String.valueOf(mMovie.movieId),
-              mMovie.posterUrlLarge
+              String.valueOf(mMovie.movieId)
       };
 
-      Cursor cursor = db.query(MovieContract.MoviePosterEntry.TABLE_NAME,
+      Cursor cursor = mContext.getContentResolver().query(
+              MovieContract.MoviePosterEntry.CONTENT_URI,
               null,
               whereClause,
               whereArgs,
-              null,
-              null,
               MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID);
 
-      if (cursor.moveToFirst()){
+      if (cursor != null && cursor.moveToFirst()){
         byte[] imageData = cursor.getBlob(cursor.getColumnIndex(MovieContract.MoviePosterEntry.COLUMN_POSTER_BYTES));
         result = BitmapFactory.decodeByteArray(imageData,0, imageData.length);
       }
