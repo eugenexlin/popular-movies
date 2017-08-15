@@ -18,8 +18,8 @@ import android.support.annotation.Nullable;
 public class MovieProvider extends ContentProvider {
   private MovieDbHelper mMovieHelper;
 
-  public static final int CODE_MOVIE_INFO = 100;
-  public static final int CODE_MOVIE_POSTER = 101;
+  private static final int CODE_MOVIE_INFO = 100;
+  private static final int CODE_MOVIE_POSTER = 101;
 
   private static final UriMatcher sUriMatcher = buildUriMatcher();
 
@@ -97,13 +97,12 @@ public class MovieProvider extends ContentProvider {
     return 0;
   }
 
-  public static UriMatcher buildUriMatcher() {
+  private static UriMatcher buildUriMatcher() {
 
     final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
     final String authority = MovieContract.CONTENT_AUTHORITY;
 
     matcher.addURI(authority, MovieContract.PATH_MOVIE, CODE_MOVIE_INFO);
-
     matcher.addURI(authority, MovieContract.PATH_POSTER, CODE_MOVIE_POSTER);
 
     return matcher;

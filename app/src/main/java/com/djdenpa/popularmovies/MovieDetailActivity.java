@@ -1,7 +1,5 @@
 package com.djdenpa.popularmovies;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,8 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -149,9 +145,6 @@ public class MovieDetailActivity extends AppCompatActivity{
       @Override
       public void onClick(View v) {
         mCheckBoxFavorite.setEnabled(false);
-        Animator animator = AnimatorInflater.loadAnimator(mContext, R.animator.star_pulse);
-        animator.setTarget(mCheckBoxFavorite);
-        animator.start();
         if (mMovieId < 0){
           Toast.makeText(mContext, R.string.favorite_null_movie_id,Toast.LENGTH_SHORT).show();
           return;
@@ -237,6 +230,7 @@ public class MovieDetailActivity extends AppCompatActivity{
 
     @Override
     protected MovieInformation doInBackground(Integer... movieId) {
+      Cursor cursor = null;
       try {
         if (shouldLoadFromFavorite){
 
@@ -245,7 +239,7 @@ public class MovieDetailActivity extends AppCompatActivity{
                   String.valueOf(movieId[0])
           };
 
-          Cursor cursor = mContext.getContentResolver().query(
+          cursor = mContext.getContentResolver().query(
                   MovieContract.MovieInformationEntry.CONTENT_URI,
                   null,
                   whereClause,
@@ -263,6 +257,10 @@ public class MovieDetailActivity extends AppCompatActivity{
       } catch (Exception e) {
         e.printStackTrace();
         return null;
+      } finally {
+        if (cursor != null){
+          cursor.close();
+        }
       }
     }
 
@@ -339,7 +337,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     return super.onOptionsItemSelected(item);
   }
 
-  public void toggleFavorite(final boolean shouldAddFavorite){
+  private void toggleFavorite(final boolean shouldAddFavorite){
     new AsyncTask<Void, Void, String>() {
       protected String doInBackground(Void... params) {
         ContentResolver resolver = mContext.getContentResolver();
@@ -385,24 +383,29 @@ public class MovieDetailActivity extends AppCompatActivity{
 
   }
 
-  public boolean checkHasFavorite(){
+  private boolean checkHasFavorite(){
 
     String whereClause = MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID + " = ?";
     String[] whereArgs = new String[] {
             String.valueOf(mMovieId)
     };
 
-    Cursor countCursor = getContentResolver().query(MovieContract.MovieInformationEntry.CONTENT_URI,
+    Cursor cursor = getContentResolver().query(MovieContract.MovieInformationEntry.CONTENT_URI,
             new String[] {"COUNT(*) AS count"},
             whereClause,
             whereArgs,
             null);
 
-    if (countCursor != null && countCursor.moveToFirst()){
-      return countCursor.getInt(0) > 0;
+    boolean result = false;
+    if (cursor != null && cursor.moveToFirst()){
+      result = cursor.getInt(0) > 0;
     }
 
-    return false;
+    if (cursor != null){
+      cursor.close();
+    }
+
+    return result;
   }
 
 
@@ -476,7 +479,7 @@ public class MovieDetailActivity extends AppCompatActivity{
     For now, I resorted to something I found
     https://stackoverflow.com/questions/1778485/android-listview-display-all-available-items-without-scroll-with-static-header
    */
-  public static void forceFullHeightListViews(ListView listView){
+  private static void forceFullHeightListViews(ListView listView){
     ListAdapter listAdapter = listView.getAdapter();
     if (listAdapter != null) {
 

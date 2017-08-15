@@ -59,7 +59,7 @@ public class MovieVideoItemAdapter extends ArrayAdapter<VideoInformation> {
       mViewHolder.name.setText(video.name);
 
       String thumbnailUrl = video.thumbnailUrl();
-      if (thumbnailUrl != ""){
+      if (!thumbnailUrl.equals("")){
         Picasso.with(mContext).load(video.thumbnailUrl()).into(mViewHolder.mThumbnail, new com.squareup.picasso.Callback() {
           @Override
           public void onSuccess() {

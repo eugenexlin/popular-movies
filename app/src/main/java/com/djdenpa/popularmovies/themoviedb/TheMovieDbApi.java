@@ -1,10 +1,8 @@
 package com.djdenpa.popularmovies.themoviedb;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.djdenpa.popularmovies.BuildConfig;
-import com.djdenpa.popularmovies.database.MovieDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -97,8 +95,7 @@ public class TheMovieDbApi {
     URL url;
     try {
       url = new URL(discoverUri.toString());
-      String httpResult = getResponseFromHttpUrl(url);
-      return httpResult;
+      return getResponseFromHttpUrl(url);
     } catch (Exception e) {
       e.printStackTrace();
     }

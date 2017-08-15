@@ -127,7 +127,7 @@ public class PopMovies extends AppCompatActivity {
   /**
    * Based On Suggestion from Otieno Rowland code review.
    */
-  public static int calculateNoOfColumns(Context context) {
+  private static int calculateNoOfColumns(Context context) {
     DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
     //interesting means, I do not want it always just to be basically based on real life size.
     //I want tablets to display more columns, but also display them bigger.
@@ -293,7 +293,7 @@ public class PopMovies extends AppCompatActivity {
     }
   }
 
-  protected ArrayList<MovieInformation> queryMoviesFromDatabase(ApiParams params){
+  private ArrayList<MovieInformation> queryMoviesFromDatabase(ApiParams params){
 
     Cursor cursor = this.getContentResolver().query(
             MovieContract.MovieInformationEntry.CONTENT_URI,
@@ -303,6 +303,9 @@ public class PopMovies extends AppCompatActivity {
             MovieContract.MovieInformationEntry.COLUMN_MOVIE_ID);
 
     ArrayList<MovieInformation> result = new ArrayList<>();
+    if (cursor == null){
+      return result;
+    }
     for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
       String movieJson = cursor.getString(cursor.getColumnIndex(MovieContract.MovieInformationEntry.COLUMN_MOVIE_JSON));
       try {

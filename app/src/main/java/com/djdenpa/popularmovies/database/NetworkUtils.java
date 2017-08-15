@@ -3,7 +3,6 @@ package com.djdenpa.popularmovies.database;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -29,8 +28,7 @@ public class NetworkUtils {
         .openConnection();
       connection.setDoInput(true);
       connection.connect();
-      byte[] input = IOUtils.toByteArray( connection.getInputStream());
-      return input;
+      return IOUtils.toByteArray( connection.getInputStream());
     } catch (Exception e) {
       e.printStackTrace();
       return null;
@@ -68,6 +66,9 @@ public class NetworkUtils {
       if (cursor != null && cursor.moveToFirst()){
         byte[] imageData = cursor.getBlob(cursor.getColumnIndex(MovieContract.MoviePosterEntry.COLUMN_POSTER_BYTES));
         result = BitmapFactory.decodeByteArray(imageData,0, imageData.length);
+      }
+      if (cursor != null){
+        cursor.close();
       }
 
       return result;

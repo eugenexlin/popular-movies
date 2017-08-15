@@ -3,6 +3,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:gravity="center_vertical"
     >
@@ -11,15 +12,16 @@
       android:id="@+id/iv_video_thumb"
       android:layout_width="@dimen/video_thumbnail_size"
       android:layout_height="@dimen/video_thumbnail_size"
-      app:srcCompat="@color/tintForTextOnImage"/>
+      app:srcCompat="@color/tintForTextOnImage"
+      android:contentDescription="@string/poster_content_description"/>
 
   <TextView
       android:id="@+id/tv_video_name"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
       android:padding="12dp"
       android:textSize="@dimen/normal_text_size"
-      android:text="TextView"/>
+      tools:text="@string/placeholder_video_name"/>
 
 </LinearLayout>

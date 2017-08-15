@@ -37,7 +37,7 @@ public class MovieInformation implements Parcelable {
 
   public int duration;
 
-  protected MovieInformation(Parcel in) {
+  private MovieInformation(Parcel in) {
     movieId = in.readInt();
     originalTitle = in.readString();
     //plotSynopsis = in.readString();
