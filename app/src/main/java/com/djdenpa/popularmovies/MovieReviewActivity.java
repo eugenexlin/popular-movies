@@ -119,7 +119,9 @@ public class MovieReviewActivity extends AppCompatActivity {
             layoutManager.getOrientation());
     mRecyclerView.addItemDecoration(mDividerItemDecoration);
 
-    new AppendMoreReviewsTask().execute(mMovieId, mPageNum);
+    if (savedInstanceState == null) {
+      new AppendMoreReviewsTask().execute(mMovieId, mPageNum);
+    }
   }
 
   private void FetchReviewPage(){

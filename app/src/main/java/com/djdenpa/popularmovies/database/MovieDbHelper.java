@@ -12,7 +12,7 @@ import com.djdenpa.popularmovies.database.MovieContract.*;
 
 public class MovieDbHelper extends SQLiteOpenHelper {
   private static final String DATABASE_NAME = "movie.db";
-  private static final int DATABASE_VERSION = 2;
+  private static final int DATABASE_VERSION = 3;
 
   public MovieDbHelper(Context context){
     super(context, DATABASE_NAME, null, DATABASE_VERSION);

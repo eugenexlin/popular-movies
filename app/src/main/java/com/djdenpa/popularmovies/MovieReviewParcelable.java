@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * parcelable for saving review state
  */
 
-public class MovieReviewParcelable  implements Parcelable {
+public class MovieReviewParcelable implements Parcelable {
   public int mScrollPosition;
   public int mPageNum;
   public ArrayList<ReviewInformation> mReviewData;

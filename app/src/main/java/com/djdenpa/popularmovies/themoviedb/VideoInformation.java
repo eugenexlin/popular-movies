@@ -1,5 +1,8 @@
 package com.djdenpa.popularmovies.themoviedb;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,7 +15,7 @@ import java.util.Comparator;
  * Trailers/ videos object
  */
 
-public class VideoInformation {
+public class VideoInformation implements Parcelable {
 
   public String videoId;
 
@@ -35,6 +38,27 @@ public class VideoInformation {
   }
 
 
+  protected VideoInformation(Parcel in) {
+    videoId = in.readString();
+    key = in.readString();
+    site = in.readString();
+    name = in.readString();
+    type = in.readString();
+    size = in.readInt();
+  }
+
+  public static final Creator<VideoInformation> CREATOR = new Creator<VideoInformation>() {
+    @Override
+    public VideoInformation createFromParcel(Parcel in) {
+      return new VideoInformation(in);
+    }
+
+    @Override
+    public VideoInformation[] newArray(int size) {
+      return new VideoInformation[size];
+    }
+  };
+
   public String videoUrl(){
     switch(site.toUpperCase()){
       case "YOUTUBE":
@@ -50,6 +74,21 @@ public class VideoInformation {
       default:
         return ""; //just don't load if not supported
     }
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(videoId);
+    dest.writeString(key);
+    dest.writeString(site);
+    dest.writeString(name);
+    dest.writeString(type);
+    dest.writeInt(size);
   }
 
 

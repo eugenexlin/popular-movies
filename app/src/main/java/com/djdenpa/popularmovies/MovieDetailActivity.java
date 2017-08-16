@@ -48,6 +48,9 @@ import java.util.Locale;
 
 public class MovieDetailActivity extends AppCompatActivity{
 
+  private static final String MOVIE_VIDEO_TRAILER_STATE = "movie.video.trailer.state";
+  private static final String MOVIE_VIDEO_OTHER_STATE = "movie.video.other.state";
+
   public static final String MOVIE_NAME_EXTRA = "MovieDetailActivity_MOVIE_NAME_EXTRA";
   public static final String MOVIE_ID_EXTRA = "MovieDetailActivity_MOVIE_ID_EXTRA";
   public static final String MOVIE_IS_FAVORITE = "MovieDetailActivity_MOVIE_IS_FAVORITE";
@@ -90,11 +93,7 @@ public class MovieDetailActivity extends AppCompatActivity{
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (getResources().getConfiguration().orientation == 	android.content.res.Configuration.ORIENTATION_LANDSCAPE){
-      setContentView(R.layout.activity_movie_details_landscape);
-    }else{
-      setContentView(R.layout.activity_movie_details);
-    }
+    setContentView(R.layout.activity_movie_details);
 
     setTitle(R.string.movie_details_header);
     mContext = this;
@@ -185,10 +184,33 @@ public class MovieDetailActivity extends AppCompatActivity{
 
     mLoadingVideos = (ProgressBar) findViewById(R.id.pb_videos);
 
-    new LoadMovieVideosTask().execute(mMovieId);
-
+    if(savedInstanceState == null) {
+      new LoadMovieVideosTask().execute(mMovieId);
+    }
   }
 
+
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelableArrayList(MOVIE_VIDEO_TRAILER_STATE, mAdapterVideoTrailers.mVideoData);
+    outState.putParcelableArrayList(MOVIE_VIDEO_OTHER_STATE, mAdapterVideoOthers.mVideoData);
+  }
+
+  @Override
+  public void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    if (savedInstanceState.containsKey(MOVIE_VIDEO_TRAILER_STATE)) {
+      ArrayList<VideoInformation> videoTrailers = savedInstanceState.getParcelableArrayList(MOVIE_VIDEO_TRAILER_STATE);
+      mAdapterVideoTrailers.setData(videoTrailers);
+      forceFullHeightListViews(mListViewVideoTrailers);
+    }
+    if (savedInstanceState.containsKey(MOVIE_VIDEO_OTHER_STATE)) {
+    ArrayList<VideoInformation> videoOthers = savedInstanceState.getParcelableArrayList(MOVIE_VIDEO_OTHER_STATE);
+    mAdapterVideoOthers.setData(videoOthers);
+    forceFullHeightListViews(mListViewVideoOthers);
+    }
+  }
 
   private void showErrorMessage(String message) {
     mLoadingIndicator.setVisibility(View.GONE);

@@ -270,7 +270,7 @@ public class PopMovies extends AppCompatActivity {
       try {
         ApiParams param = params[0];
         if (param.sort == ApiParams.MovieSort.FAVORITE){
-          return queryMoviesFromDatabase(param);
+          return queryMoviesFromDatabase();
         }else{
           return TheMovieDbApi.QueryMovies(param);
         }
@@ -295,7 +295,7 @@ public class PopMovies extends AppCompatActivity {
     }
   }
 
-  private ArrayList<MovieInformation> queryMoviesFromDatabase(ApiParams params){
+  private ArrayList<MovieInformation> queryMoviesFromDatabase(){
 
     Cursor cursor = this.getContentResolver().query(
             MovieContract.MovieInformationEntry.CONTENT_URI,
